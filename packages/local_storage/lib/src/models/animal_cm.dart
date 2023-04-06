@@ -43,8 +43,8 @@ class AnimalCM {
   EnvironmentCM? environment;
   @Name("tags")
   List<String>? tags;
-  @Name("published_at")
-  String? publishedAt;
+  @Name("publishedAt")
+  DateTime? publishedAt;
   @Name("distance")
   double? distance;
 }

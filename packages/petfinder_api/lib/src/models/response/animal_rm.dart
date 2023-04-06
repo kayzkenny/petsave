@@ -11,30 +11,30 @@ part 'animal_rm.g.dart';
 @JsonSerializable(createToJson: false)
 class AnimalRM {
   AnimalRM({
-    required this.id,
-    required this.organizationId,
-    required this.url,
-    required this.type,
-    required this.species,
-    required this.breeds,
-    required this.colors,
-    required this.age,
-    required this.gender,
-    required this.size,
-    required this.coat,
-    required this.name,
-    required this.description,
-    required this.photos,
-    required this.videos,
-    required this.status,
-    required this.attributes,
-    required this.environment,
-    required this.tags,
-    required this.publishedAt,
-    required this.distance,
+    this.id,
+    this.organizationId,
+    this.url,
+    this.type,
+    this.species,
+    this.breeds,
+    this.colors,
+    this.age,
+    this.gender,
+    this.size,
+    this.coat,
+    this.name,
+    this.description,
+    this.photos,
+    this.videos,
+    this.status,
+    this.attributes,
+    this.environment,
+    this.tags,
+    this.publishedAt,
+    this.distance,
   });
 
-  final int id;
+  final int? id;
   @JsonKey(name: 'organization_id')
   final String? organizationId;
   final String? url;

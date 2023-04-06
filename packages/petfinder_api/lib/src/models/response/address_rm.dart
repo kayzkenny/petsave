@@ -5,12 +5,12 @@ part 'address_rm.g.dart';
 @JsonSerializable(createToJson: false)
 class AddressRM {
   AddressRM({
-    required this.address1,
-    required this.address2,
-    required this.city,
-    required this.state,
-    required this.postcode,
-    required this.country,
+    this.address1,
+    this.address2,
+    this.city,
+    this.state,
+    this.postcode,
+    this.country,
   });
 
   final String? address1;

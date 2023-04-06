@@ -82,10 +82,10 @@ const AnimalCMSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'PhotosCM',
     ),
-    r'published_at': PropertySchema(
+    r'publishedAt': PropertySchema(
       id: 12,
-      name: r'published_at',
-      type: IsarType.string,
+      name: r'publishedAt',
+      type: IsarType.dateTime,
     ),
     r'size': PropertySchema(
       id: 13,
@@ -231,12 +231,6 @@ int _animalCMEstimateSize(
     }
   }
   {
-    final value = object.publishedAt;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
     final value = object.size;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -337,7 +331,7 @@ void _animalCMSerialize(
     PhotosCMSchema.serialize,
     object.photos,
   );
-  writer.writeString(offsets[12], object.publishedAt);
+  writer.writeDateTime(offsets[12], object.publishedAt);
   writer.writeString(offsets[13], object.size);
   writer.writeString(offsets[14], object.species);
   writer.writeString(offsets[15], object.status);
@@ -393,7 +387,7 @@ AnimalCM _animalCMDeserialize(
     allOffsets,
     PhotosCM(),
   );
-  object.publishedAt = reader.readStringOrNull(offsets[12]);
+  object.publishedAt = reader.readDateTimeOrNull(offsets[12]);
   object.size = reader.readStringOrNull(offsets[13]);
   object.species = reader.readStringOrNull(offsets[14]);
   object.status = reader.readStringOrNull(offsets[15]);
@@ -462,7 +456,7 @@ P _animalCMDeserializeProp<P>(
         PhotosCM(),
       )) as P;
     case 12:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 13:
       return (reader.readStringOrNull(offset)) as P;
     case 14:
@@ -1778,7 +1772,7 @@ extension AnimalCMQueryFilter
   QueryBuilder<AnimalCM, AnimalCM, QAfterFilterCondition> publishedAtIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'published_at',
+        property: r'publishedAt',
       ));
     });
   }
@@ -1787,139 +1781,61 @@ extension AnimalCMQueryFilter
       publishedAtIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'published_at',
+        property: r'publishedAt',
       ));
     });
   }
 
   QueryBuilder<AnimalCM, AnimalCM, QAfterFilterCondition> publishedAtEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
+      DateTime? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'published_at',
+        property: r'publishedAt',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<AnimalCM, AnimalCM, QAfterFilterCondition>
       publishedAtGreaterThan(
-    String? value, {
+    DateTime? value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'published_at',
+        property: r'publishedAt',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<AnimalCM, AnimalCM, QAfterFilterCondition> publishedAtLessThan(
-    String? value, {
+    DateTime? value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'published_at',
+        property: r'publishedAt',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<AnimalCM, AnimalCM, QAfterFilterCondition> publishedAtBetween(
-    String? lower,
-    String? upper, {
+    DateTime? lower,
+    DateTime? upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'published_at',
+        property: r'publishedAt',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AnimalCM, AnimalCM, QAfterFilterCondition> publishedAtStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'published_at',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AnimalCM, AnimalCM, QAfterFilterCondition> publishedAtEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'published_at',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AnimalCM, AnimalCM, QAfterFilterCondition> publishedAtContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'published_at',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AnimalCM, AnimalCM, QAfterFilterCondition> publishedAtMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'published_at',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<AnimalCM, AnimalCM, QAfterFilterCondition> publishedAtIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'published_at',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<AnimalCM, AnimalCM, QAfterFilterCondition>
-      publishedAtIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'published_at',
-        value: '',
       ));
     });
   }
@@ -3123,13 +3039,13 @@ extension AnimalCMQuerySortBy on QueryBuilder<AnimalCM, AnimalCM, QSortBy> {
 
   QueryBuilder<AnimalCM, AnimalCM, QAfterSortBy> sortByPublishedAt() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'published_at', Sort.asc);
+      return query.addSortBy(r'publishedAt', Sort.asc);
     });
   }
 
   QueryBuilder<AnimalCM, AnimalCM, QAfterSortBy> sortByPublishedAtDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'published_at', Sort.desc);
+      return query.addSortBy(r'publishedAt', Sort.desc);
     });
   }
 
@@ -3294,13 +3210,13 @@ extension AnimalCMQuerySortThenBy
 
   QueryBuilder<AnimalCM, AnimalCM, QAfterSortBy> thenByPublishedAt() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'published_at', Sort.asc);
+      return query.addSortBy(r'publishedAt', Sort.asc);
     });
   }
 
   QueryBuilder<AnimalCM, AnimalCM, QAfterSortBy> thenByPublishedAtDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'published_at', Sort.desc);
+      return query.addSortBy(r'publishedAt', Sort.desc);
     });
   }
 
@@ -3416,10 +3332,9 @@ extension AnimalCMQueryWhereDistinct
     });
   }
 
-  QueryBuilder<AnimalCM, AnimalCM, QDistinct> distinctByPublishedAt(
-      {bool caseSensitive = true}) {
+  QueryBuilder<AnimalCM, AnimalCM, QDistinct> distinctByPublishedAt() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'published_at', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'publishedAt');
     });
   }
 
@@ -3546,9 +3461,9 @@ extension AnimalCMQueryProperty
     });
   }
 
-  QueryBuilder<AnimalCM, String?, QQueryOperations> publishedAtProperty() {
+  QueryBuilder<AnimalCM, DateTime?, QQueryOperations> publishedAtProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'published_at');
+      return query.addPropertyName(r'publishedAt');
     });
   }
 

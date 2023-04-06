@@ -5,11 +5,11 @@ part 'attributes_rm.g.dart';
 @JsonSerializable(createToJson: false)
 class AttributesRM {
   AttributesRM({
-    required this.spayedNeutered,
-    required this.houseTrained,
-    required this.declawed,
-    required this.specialNeeds,
-    required this.shotsCurrent,
+    this.spayedNeutered,
+    this.houseTrained,
+    this.declawed,
+    this.specialNeeds,
+    this.shotsCurrent,
   });
 
   @JsonKey(name: 'spayed_neutered')

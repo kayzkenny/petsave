@@ -4,7 +4,7 @@ part 'videos_rm.g.dart';
 
 @JsonSerializable(createToJson: false)
 class VideosRM {
-  VideosRM({required this.embed});
+  VideosRM({this.embed});
 
   final String? embed;
 

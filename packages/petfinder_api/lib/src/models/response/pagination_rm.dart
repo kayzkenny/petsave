@@ -5,10 +5,10 @@ part 'pagination_rm.g.dart';
 @JsonSerializable(createToJson: false)
 class PaginationRM {
   PaginationRM({
-    required this.countPerPage,
-    required this.totalCount,
-    required this.currentPage,
-    required this.totalPages,
+    this.countPerPage,
+    this.totalCount,
+    this.currentPage,
+    this.totalPages,
   });
 
   @JsonKey(name: 'count_per_page')

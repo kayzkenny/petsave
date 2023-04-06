@@ -5,10 +5,10 @@ part 'photos_rm.g.dart';
 @JsonSerializable(createToJson: false)
 class PhotosRM {
   PhotosRM({
-    required this.small,
-    required this.medium,
-    required this.large,
-    required this.full,
+    this.small,
+    this.medium,
+    this.large,
+    this.full,
   });
 
   final String? small;

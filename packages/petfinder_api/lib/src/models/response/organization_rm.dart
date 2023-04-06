@@ -7,19 +7,19 @@ part 'organization_rm.g.dart';
 @JsonSerializable(createToJson: false)
 class OrganizationRM {
   OrganizationRM({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.phone,
-    required this.address,
-    required this.url,
-    required this.website,
-    required this.missionStatement,
-    required this.distance,
-    required this.photos,
+    this.id,
+    this.name,
+    this.email,
+    this.phone,
+    this.address,
+    this.url,
+    this.website,
+    this.missionStatement,
+    this.distance,
+    this.photos,
   });
 
-  final String id;
+  final String? id;
   final String? name;
   final String? email;
   final String? phone;

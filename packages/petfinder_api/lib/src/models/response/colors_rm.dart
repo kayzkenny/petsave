@@ -5,9 +5,9 @@ part 'colors_rm.g.dart';
 @JsonSerializable(createToJson: false)
 class ColorsRM {
   ColorsRM({
-    required this.primary,
-    required this.secondary,
-    required this.tertiary,
+    this.primary,
+    this.secondary,
+    this.tertiary,
   });
 
   final String? primary;

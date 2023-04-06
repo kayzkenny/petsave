@@ -5,10 +5,10 @@ part 'breeds_rm.g.dart';
 @JsonSerializable(createToJson: false)
 class BreedsRM {
   BreedsRM({
-    required this.primary,
-    required this.secondary,
-    required this.mixed,
-    required this.unknown,
+    this.primary,
+    this.secondary,
+    this.mixed,
+    this.unknown,
   });
 
   final String? primary;

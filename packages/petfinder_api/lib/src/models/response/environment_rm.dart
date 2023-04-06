@@ -5,9 +5,9 @@ part 'environment_rm.g.dart';
 @JsonSerializable(createToJson: false)
 class EnvironmentRM {
   EnvironmentRM({
-    required this.children,
-    required this.dogs,
-    required this.cats,
+    this.children,
+    this.dogs,
+    this.cats,
   });
 
   final bool? children;

@@ -6,9 +6,9 @@ part 'contact_rm.g.dart';
 @JsonSerializable(createToJson: false)
 class ContactRM {
   ContactRM({
-    required this.email,
-    required this.phone,
-    required this.address,
+    this.email,
+    this.phone,
+    this.address,
   });
 
   final String? email;

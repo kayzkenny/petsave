@@ -7,7 +7,7 @@ part of 'animal_rm.dart';
 // **************************************************************************
 
 AnimalRM _$AnimalRMFromJson(Map<String, dynamic> json) => AnimalRM(
-      id: json['id'] as int,
+      id: json['id'] as int?,
       organizationId: json['organization_id'] as String?,
       url: json['url'] as String?,
       type: json['type'] as String?,
