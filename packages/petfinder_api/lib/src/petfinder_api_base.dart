@@ -3,11 +3,20 @@ import 'package:petfinder_api/src/models/response/animal_list_page_rm.dart';
 import 'package:petfinder_api/src/models/response/organization_list_page_rm.dart';
 import 'package:retrofit/retrofit.dart';
 
+import 'models/response/auth_response_rm.dart';
+
 part 'petfinder_api_base.g.dart';
 
 @RestApi()
 abstract class PetFinderApi {
   factory PetFinderApi(Dio dio) = _PetFinderApi;
+
+  @GET('/oauth2/token')
+  Future<AuthResponseRM> getAuthToken({
+    @Query('grant_type') String? grantType,
+    @Query('client_id') String? clientId,
+    @Query('client_secret') String? clientSecret,
+  });
 
   @GET('/animals')
   Future<AnimalListPageRM> getAnimals({

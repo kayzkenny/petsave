@@ -19,6 +19,38 @@ class _PetFinderApi implements PetFinderApi {
   String? baseUrl;
 
   @override
+  Future<AuthResponseRM> getAuthToken({
+    grantType,
+    clientId,
+    clientSecret,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'grant_type': grantType,
+      r'client_id': clientId,
+      r'client_secret': clientSecret,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<AuthResponseRM>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/oauth2/token',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = AuthResponseRM.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<AnimalListPageRM> getAnimals({
     type,
     breed,
