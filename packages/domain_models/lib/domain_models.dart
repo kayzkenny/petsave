@@ -14,5 +14,8 @@ export 'src/environment.dart';
 export 'src/organization.dart';
 export 'src/photos.dart';
 export 'src/videos.dart';
+export 'src/pagination.dart';
+export 'src/animal_list_page.dart';
+export 'src/organization_list_page.dart';
 
 // TODO: Export any libraries intended for clients of this package.

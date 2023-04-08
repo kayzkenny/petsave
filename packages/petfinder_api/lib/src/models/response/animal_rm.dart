@@ -55,7 +55,7 @@ class AnimalRM {
   final EnvironmentRM? environment;
   final List<String>? tags;
   @JsonKey(name: 'published_at')
-  final String? publishedAt;
+  final DateTime? publishedAt;
   final double? distance;
 
   static const fromJson = _$AnimalRMFromJson;

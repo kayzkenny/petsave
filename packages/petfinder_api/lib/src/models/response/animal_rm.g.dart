@@ -38,6 +38,8 @@ AnimalRM _$AnimalRMFromJson(Map<String, dynamic> json) => AnimalRM(
           ? null
           : EnvironmentRM.fromJson(json['environment'] as Map<String, dynamic>),
       tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      publishedAt: json['published_at'] as String?,
+      publishedAt: json['published_at'] == null
+          ? null
+          : DateTime.parse(json['published_at'] as String),
       distance: (json['distance'] as num?)?.toDouble(),
     );
