@@ -31,6 +31,12 @@ class LocalStorage {
     });
   }
 
+  // get animal by id
+  Future<AnimalCM?> getAnimalById(int id) async {
+    final animal = await isar.animalCMs.get(id);
+    return animal;
+  }
+
   // get all list of organizations
   Future<List<OrganizationCM>> getAllOrganizations() async {
     final query = isar.organizationCMs.where();

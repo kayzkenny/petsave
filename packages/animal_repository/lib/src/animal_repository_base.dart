@@ -12,7 +12,7 @@ class AnimalRepository {
   final PetFinderApi remoteApi;
   final LocalStorage localStorage;
 
-  Stream<List<Animal>> getAnimalListPage({
+  Stream<List<Animal>> getAnimalListPagedStream({
     String? name,
     required int page,
     required int limit,
@@ -77,6 +77,67 @@ class AnimalRepository {
     }
   }
 
+  Future<List<Animal>> getAnimalListPaged({
+    String? name,
+    required int page,
+    required int limit,
+    required AnimalFetchPolicy fetchPolicy,
+  }) async {
+    final isSearching = name != null;
+    final isFetchPolicyNetworkOnly =
+        fetchPolicy == AnimalFetchPolicy.networkOnly;
+
+    final shouldSkipCacheLookup = isSearching || isFetchPolicyNetworkOnly;
+
+    if (shouldSkipCacheLookup) {
+      final networkResults = await _getAnimalsFromNetwork(
+        name: name,
+        page: page,
+        limit: limit,
+        fetchPolicy: fetchPolicy,
+      );
+
+      return networkResults.animalList;
+    } else {
+      final cacheResults = await localStorage.animalsPaginated(
+        page: page,
+        limit: limit,
+      );
+
+      // final isFetchPolicyCacheAndNetwork =
+      //     fetchPolicy == AnimalFetchPolicy.cacheAndNetwork;
+
+      // final isFetchPolicyCachePreferably =
+      //     fetchPolicy == AnimalFetchPolicy.cachePreferably;
+
+      // final shouldReturnCachedPageInAdvance =
+      //     isFetchPolicyCachePreferably || isFetchPolicyCacheAndNetwork;
+
+      // if (shouldReturnCachedPageInAdvance && cacheResults.isNotEmpty) {
+      //   return cacheResults.map((e) => e.toDomainModel()).toList();
+      // }
+
+      try {
+        final networkResults = await _getAnimalsFromNetwork(
+          name: name,
+          page: page,
+          limit: limit,
+          fetchPolicy: fetchPolicy,
+        );
+
+        return networkResults.animalList;
+      } catch (_) {
+        final isFetchPolicyNetworkPreferably =
+            fetchPolicy == AnimalFetchPolicy.networkPreferably;
+        if (cacheResults.isNotEmpty && isFetchPolicyNetworkPreferably) {
+          return cacheResults.map((e) => e.toDomainModel()).toList();
+        }
+
+        rethrow;
+      }
+    }
+  }
+
   Future<AnimalListPage> _getAnimalsFromNetwork({
     String? name,
     required int page,
@@ -108,8 +169,15 @@ class AnimalRepository {
 }
 
 enum AnimalFetchPolicy {
+  /// Fetches from cache and network, and emits the cached results first.
   cacheAndNetwork,
+
+  /// Fetches from network only.
   networkOnly,
+
+  /// Fetches from network and cache, and emits the network results first.
   networkPreferably,
+
+  /// Fetches from cache only.
   cachePreferably,
 }
