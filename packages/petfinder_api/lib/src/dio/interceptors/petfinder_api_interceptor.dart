@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
-import 'package:petfinder_api/src/models/response/auth_response_rm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Interceptor for the Petfinder API.
@@ -12,13 +9,13 @@ class PetfinderApiInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     options.headers['Content-Type'] = 'application/json';
+    print(options.path);
 
-    if (!options.path.startsWith('/Authentication')) {
+    if (!options.path.startsWith('/oauth2')) {
       final sp = await SharedPreferences.getInstance();
-      final json = sp.getString('accessTokenKey');
-      if (json != null) {
-        final authResponse = AuthResponseRM.fromJson(jsonDecode(json));
-        final token = authResponse.accessToken;
+      final token = sp.getString('accessTokenKey');
+      print(token);
+      if (token != null) {
         options.headers['Authorization'] = 'Bearer $token';
       }
     }

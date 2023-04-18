@@ -12,7 +12,7 @@ class AnimalRepository {
   final PetFinderApi remoteApi;
   final LocalStorage localStorage;
 
-  Stream<List<Animal>> getAnimalListPagedStream({
+  Stream<List<Animal>> getAnimalListStream({
     String? name,
     required int page,
     required int limit,
@@ -34,10 +34,12 @@ class AnimalRepository {
 
       yield networkResults.animalList;
     } else {
-      final cacheResults = await localStorage.animalsPaginated(
-        page: page,
-        limit: limit,
-      );
+      // final cacheResults = await localStorage.animalsPaginated(
+      //   page: page,
+      //   limit: limit,
+      // );
+
+      final cacheResults = await localStorage.getAllAnimals();
 
       final isFetchPolicyCacheAndNetwork =
           fetchPolicy == AnimalFetchPolicy.cacheAndNetwork;

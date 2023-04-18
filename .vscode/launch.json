@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "name": "PetSave",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "program": "lib/main.dart",
+            "args": [
+                "--dart-define",
+                "fav-qs-app-token=c5294714b1bd79284c7389529de69182"
+            ]
+        }
+    ]
+}

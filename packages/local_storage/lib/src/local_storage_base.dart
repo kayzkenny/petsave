@@ -10,12 +10,16 @@ class LocalStorage {
 
   // clear all animals
   Future<void> clearAllAnimals() async {
-    await isar.animalCMs.clear();
+    await isar.writeTxn(() async {
+      await isar.animalCMs.clear();
+    });
   }
 
   // clear all organizations
   Future<void> clearAllOrganizations() async {
-    await isar.organizationCMs.clear();
+    await isar.writeTxn(() async {
+      await isar.organizationCMs.clear();
+    });
   }
 
   // get all list of animals
@@ -58,9 +62,20 @@ class LocalStorage {
         await isar.organizationCMs.where().offset(offset).limit(10).findAll();
     return results;
   }
+
+  // returns a stream of the animals collection
+  Stream<List<AnimalCM>> animalsStream() {
+    return isar.animalCMs.where().watch();
+  }
 }
 
 final isarPod = FutureProvider((ref) async {
   final dir = await getApplicationDocumentsDirectory();
   return Isar.open([AnimalCMSchema, OrganizationCMSchema], directory: dir.path);
+});
+
+final localStoragePod = FutureProvider<LocalStorage>((ref) async {
+  final isar = await ref.watch(isarPod.future);
+
+  return LocalStorage(isar);
 });
