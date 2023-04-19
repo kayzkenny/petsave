@@ -2,6 +2,7 @@ import 'package:animal_repository/animal_repository.dart';
 import 'package:domain_models/domain_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:onboarding/onboarding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:user_repository/user_repository.dart';
@@ -28,12 +29,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-          // primarySwatch: Colors.blue,
-          ),
-      home: const SignInPage(),
-    );
+        title: 'Flutter Demo',
+        theme: ThemeData(
+            // primarySwatch: Colors.blue,
+            ),
+        // home: const SignInPage(),
+        home: const OnboardingScreen());
   }
 }
 
