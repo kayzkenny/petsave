@@ -15,27 +15,29 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$Colors {
+mixin _$AnimalColors {
   String? get primary => throw _privateConstructorUsedError;
   String? get secondary => throw _privateConstructorUsedError;
   String? get tertiary => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $ColorsCopyWith<Colors> get copyWith => throw _privateConstructorUsedError;
+  $AnimalColorsCopyWith<AnimalColors> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ColorsCopyWith<$Res> {
-  factory $ColorsCopyWith(Colors value, $Res Function(Colors) then) =
-      _$ColorsCopyWithImpl<$Res, Colors>;
+abstract class $AnimalColorsCopyWith<$Res> {
+  factory $AnimalColorsCopyWith(
+          AnimalColors value, $Res Function(AnimalColors) then) =
+      _$AnimalColorsCopyWithImpl<$Res, AnimalColors>;
   @useResult
   $Res call({String? primary, String? secondary, String? tertiary});
 }
 
 /// @nodoc
-class _$ColorsCopyWithImpl<$Res, $Val extends Colors>
-    implements $ColorsCopyWith<$Res> {
-  _$ColorsCopyWithImpl(this._value, this._then);
+class _$AnimalColorsCopyWithImpl<$Res, $Val extends AnimalColors>
+    implements $AnimalColorsCopyWith<$Res> {
+  _$AnimalColorsCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -67,19 +69,22 @@ class _$ColorsCopyWithImpl<$Res, $Val extends Colors>
 }
 
 /// @nodoc
-abstract class _$$_ColorsCopyWith<$Res> implements $ColorsCopyWith<$Res> {
-  factory _$$_ColorsCopyWith(_$_Colors value, $Res Function(_$_Colors) then) =
-      __$$_ColorsCopyWithImpl<$Res>;
+abstract class _$$_AnimalColorsCopyWith<$Res>
+    implements $AnimalColorsCopyWith<$Res> {
+  factory _$$_AnimalColorsCopyWith(
+          _$_AnimalColors value, $Res Function(_$_AnimalColors) then) =
+      __$$_AnimalColorsCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String? primary, String? secondary, String? tertiary});
 }
 
 /// @nodoc
-class __$$_ColorsCopyWithImpl<$Res>
-    extends _$ColorsCopyWithImpl<$Res, _$_Colors>
-    implements _$$_ColorsCopyWith<$Res> {
-  __$$_ColorsCopyWithImpl(_$_Colors _value, $Res Function(_$_Colors) _then)
+class __$$_AnimalColorsCopyWithImpl<$Res>
+    extends _$AnimalColorsCopyWithImpl<$Res, _$_AnimalColors>
+    implements _$$_AnimalColorsCopyWith<$Res> {
+  __$$_AnimalColorsCopyWithImpl(
+      _$_AnimalColors _value, $Res Function(_$_AnimalColors) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -89,7 +94,7 @@ class __$$_ColorsCopyWithImpl<$Res>
     Object? secondary = freezed,
     Object? tertiary = freezed,
   }) {
-    return _then(_$_Colors(
+    return _then(_$_AnimalColors(
       primary: freezed == primary
           ? _value.primary
           : primary // ignore: cast_nullable_to_non_nullable
@@ -108,8 +113,8 @@ class __$$_ColorsCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Colors implements _Colors {
-  const _$_Colors({this.primary, this.secondary, this.tertiary});
+class _$_AnimalColors implements _AnimalColors {
+  const _$_AnimalColors({this.primary, this.secondary, this.tertiary});
 
   @override
   final String? primary;
@@ -120,14 +125,14 @@ class _$_Colors implements _Colors {
 
   @override
   String toString() {
-    return 'Colors(primary: $primary, secondary: $secondary, tertiary: $tertiary)';
+    return 'AnimalColors(primary: $primary, secondary: $secondary, tertiary: $tertiary)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Colors &&
+            other is _$_AnimalColors &&
             (identical(other.primary, primary) || other.primary == primary) &&
             (identical(other.secondary, secondary) ||
                 other.secondary == secondary) &&
@@ -141,15 +146,15 @@ class _$_Colors implements _Colors {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ColorsCopyWith<_$_Colors> get copyWith =>
-      __$$_ColorsCopyWithImpl<_$_Colors>(this, _$identity);
+  _$$_AnimalColorsCopyWith<_$_AnimalColors> get copyWith =>
+      __$$_AnimalColorsCopyWithImpl<_$_AnimalColors>(this, _$identity);
 }
 
-abstract class _Colors implements Colors {
-  const factory _Colors(
+abstract class _AnimalColors implements AnimalColors {
+  const factory _AnimalColors(
       {final String? primary,
       final String? secondary,
-      final String? tertiary}) = _$_Colors;
+      final String? tertiary}) = _$_AnimalColors;
 
   @override
   String? get primary;
@@ -159,6 +164,6 @@ abstract class _Colors implements Colors {
   String? get tertiary;
   @override
   @JsonKey(ignore: true)
-  _$$_ColorsCopyWith<_$_Colors> get copyWith =>
+  _$$_AnimalColorsCopyWith<_$_AnimalColors> get copyWith =>
       throw _privateConstructorUsedError;
 }

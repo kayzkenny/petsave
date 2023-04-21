@@ -18,7 +18,7 @@ class Animal with _$Animal {
     String? type,
     String? species,
     Breeds? breeds,
-    Colors? colors,
+    AnimalColors? colors,
     String? age,
     String? gender,
     String? size,

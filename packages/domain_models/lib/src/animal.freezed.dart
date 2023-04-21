@@ -22,7 +22,7 @@ mixin _$Animal {
   String? get type => throw _privateConstructorUsedError;
   String? get species => throw _privateConstructorUsedError;
   Breeds? get breeds => throw _privateConstructorUsedError;
-  Colors? get colors => throw _privateConstructorUsedError;
+  AnimalColors? get colors => throw _privateConstructorUsedError;
   String? get age => throw _privateConstructorUsedError;
   String? get gender => throw _privateConstructorUsedError;
   String? get size => throw _privateConstructorUsedError;
@@ -54,7 +54,7 @@ abstract class $AnimalCopyWith<$Res> {
       String? type,
       String? species,
       Breeds? breeds,
-      Colors? colors,
+      AnimalColors? colors,
       String? age,
       String? gender,
       String? size,
@@ -71,7 +71,7 @@ abstract class $AnimalCopyWith<$Res> {
       double? distance});
 
   $BreedsCopyWith<$Res>? get breeds;
-  $ColorsCopyWith<$Res>? get colors;
+  $AnimalColorsCopyWith<$Res>? get colors;
   $AttributesCopyWith<$Res>? get attributes;
   $EnvironmentCopyWith<$Res>? get environment;
 }
@@ -139,7 +139,7 @@ class _$AnimalCopyWithImpl<$Res, $Val extends Animal>
       colors: freezed == colors
           ? _value.colors
           : colors // ignore: cast_nullable_to_non_nullable
-              as Colors?,
+              as AnimalColors?,
       age: freezed == age
           ? _value.age
           : age // ignore: cast_nullable_to_non_nullable
@@ -213,12 +213,12 @@ class _$AnimalCopyWithImpl<$Res, $Val extends Animal>
 
   @override
   @pragma('vm:prefer-inline')
-  $ColorsCopyWith<$Res>? get colors {
+  $AnimalColorsCopyWith<$Res>? get colors {
     if (_value.colors == null) {
       return null;
     }
 
-    return $ColorsCopyWith<$Res>(_value.colors!, (value) {
+    return $AnimalColorsCopyWith<$Res>(_value.colors!, (value) {
       return _then(_value.copyWith(colors: value) as $Val);
     });
   }
@@ -261,7 +261,7 @@ abstract class _$$_AnimalCopyWith<$Res> implements $AnimalCopyWith<$Res> {
       String? type,
       String? species,
       Breeds? breeds,
-      Colors? colors,
+      AnimalColors? colors,
       String? age,
       String? gender,
       String? size,
@@ -280,7 +280,7 @@ abstract class _$$_AnimalCopyWith<$Res> implements $AnimalCopyWith<$Res> {
   @override
   $BreedsCopyWith<$Res>? get breeds;
   @override
-  $ColorsCopyWith<$Res>? get colors;
+  $AnimalColorsCopyWith<$Res>? get colors;
   @override
   $AttributesCopyWith<$Res>? get attributes;
   @override
@@ -347,7 +347,7 @@ class __$$_AnimalCopyWithImpl<$Res>
       colors: freezed == colors
           ? _value.colors
           : colors // ignore: cast_nullable_to_non_nullable
-              as Colors?,
+              as AnimalColors?,
       age: freezed == age
           ? _value.age
           : age // ignore: cast_nullable_to_non_nullable
@@ -450,7 +450,7 @@ class _$_Animal implements _Animal {
   @override
   final Breeds? breeds;
   @override
-  final Colors? colors;
+  final AnimalColors? colors;
   @override
   final String? age;
   @override
@@ -584,7 +584,7 @@ abstract class _Animal implements Animal {
       final String? type,
       final String? species,
       final Breeds? breeds,
-      final Colors? colors,
+      final AnimalColors? colors,
       final String? age,
       final String? gender,
       final String? size,
@@ -613,7 +613,7 @@ abstract class _Animal implements Animal {
   @override
   Breeds? get breeds;
   @override
-  Colors? get colors;
+  AnimalColors? get colors;
   @override
   String? get age;
   @override

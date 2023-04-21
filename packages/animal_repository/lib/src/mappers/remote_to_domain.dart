@@ -70,8 +70,8 @@ extension BreedsRMToDomain on BreedsRM {
 }
 
 extension ColorsRMToDomain on ColorsRM {
-  Colors toDomainModel() {
-    return Colors(
+  AnimalColors toDomainModel() {
+    return AnimalColors(
       primary: primary,
       secondary: secondary,
       tertiary: tertiary,

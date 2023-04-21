@@ -55,8 +55,8 @@ extension BreedsCMToDomain on BreedsCM {
 }
 
 extension ColorsCMToDomain on ColorsCM {
-  Colors toDomainModel() {
-    return Colors(
+  AnimalColors toDomainModel() {
+    return AnimalColors(
       primary: primary,
       secondary: secondary,
       tertiary: tertiary,
