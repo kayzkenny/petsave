@@ -14,6 +14,7 @@ class AnimalRepository {
 
   Stream<List<Animal>> getAnimalListStream({
     String? name,
+    String? location,
     required int page,
     required int limit,
     required AnimalFetchPolicy fetchPolicy,
@@ -26,11 +27,11 @@ class AnimalRepository {
 
     if (shouldSkipCacheLookup) {
       final networkResults = await _getAnimalsFromNetwork(
-        name: name,
-        page: page,
-        limit: limit,
-        fetchPolicy: fetchPolicy,
-      );
+          name: name,
+          page: page,
+          limit: limit,
+          fetchPolicy: fetchPolicy,
+          location: location);
 
       yield networkResults.animalList;
     } else {
@@ -59,11 +60,11 @@ class AnimalRepository {
 
       try {
         final networkResults = await _getAnimalsFromNetwork(
-          name: name,
-          page: page,
-          limit: limit,
-          fetchPolicy: fetchPolicy,
-        );
+            name: name,
+            page: page,
+            limit: limit,
+            fetchPolicy: fetchPolicy,
+            location: location);
 
         yield networkResults.animalList;
       } catch (_) {
@@ -79,69 +80,73 @@ class AnimalRepository {
     }
   }
 
-  Future<List<Animal>> getAnimalListPaged({
-    String? name,
-    required int page,
-    required int limit,
-    required AnimalFetchPolicy fetchPolicy,
-  }) async {
-    final isSearching = name != null;
-    final isFetchPolicyNetworkOnly =
-        fetchPolicy == AnimalFetchPolicy.networkOnly;
+  // Future<List<Animal>> getAnimalListPaged({
+  //   String? name,
+  //   String? location,
+  //   required int page,
+  //   required int limit,
+  //   required AnimalFetchPolicy fetchPolicy,
+  // }) async {
+  //   final isSearching = name != null;
+  //   final isFetchPolicyNetworkOnly =
+  //       fetchPolicy == AnimalFetchPolicy.networkOnly;
 
-    final shouldSkipCacheLookup = isSearching || isFetchPolicyNetworkOnly;
+  //   final shouldSkipCacheLookup = isSearching || isFetchPolicyNetworkOnly;
 
-    if (shouldSkipCacheLookup) {
-      final networkResults = await _getAnimalsFromNetwork(
-        name: name,
-        page: page,
-        limit: limit,
-        fetchPolicy: fetchPolicy,
-      );
+  //   if (shouldSkipCacheLookup) {
+  //     final networkResults = await _getAnimalsFromNetwork(
+  //       name: name,
+  //       page: page,
+  //       limit: limit,
+  //       fetchPolicy: fetchPolicy,
+  //       location: location,
+  //     );
 
-      return networkResults.animalList;
-    } else {
-      final cacheResults = await localStorage.animalsPaginated(
-        page: page,
-        limit: limit,
-      );
+  //     return networkResults.animalList;
+  //   } else {
+  //     final cacheResults = await localStorage.animalsPaginated(
+  //       page: page,
+  //       limit: limit,
+  //     );
 
-      // final isFetchPolicyCacheAndNetwork =
-      //     fetchPolicy == AnimalFetchPolicy.cacheAndNetwork;
+  //     // final isFetchPolicyCacheAndNetwork =
+  //     //     fetchPolicy == AnimalFetchPolicy.cacheAndNetwork;
 
-      // final isFetchPolicyCachePreferably =
-      //     fetchPolicy == AnimalFetchPolicy.cachePreferably;
+  //     // final isFetchPolicyCachePreferably =
+  //     //     fetchPolicy == AnimalFetchPolicy.cachePreferably;
 
-      // final shouldReturnCachedPageInAdvance =
-      //     isFetchPolicyCachePreferably || isFetchPolicyCacheAndNetwork;
+  //     // final shouldReturnCachedPageInAdvance =
+  //     //     isFetchPolicyCachePreferably || isFetchPolicyCacheAndNetwork;
 
-      // if (shouldReturnCachedPageInAdvance && cacheResults.isNotEmpty) {
-      //   return cacheResults.map((e) => e.toDomainModel()).toList();
-      // }
+  //     // if (shouldReturnCachedPageInAdvance && cacheResults.isNotEmpty) {
+  //     //   return cacheResults.map((e) => e.toDomainModel()).toList();
+  //     // }
 
-      try {
-        final networkResults = await _getAnimalsFromNetwork(
-          name: name,
-          page: page,
-          limit: limit,
-          fetchPolicy: fetchPolicy,
-        );
+  //     try {
+  //       final networkResults = await _getAnimalsFromNetwork(
+  //         name: name,
+  //         page: page,
+  //         limit: limit,
+  //         fetchPolicy: fetchPolicy,
+  //         location: location,
+  //       );
 
-        return networkResults.animalList;
-      } catch (_) {
-        final isFetchPolicyNetworkPreferably =
-            fetchPolicy == AnimalFetchPolicy.networkPreferably;
-        if (cacheResults.isNotEmpty && isFetchPolicyNetworkPreferably) {
-          return cacheResults.map((e) => e.toDomainModel()).toList();
-        }
+  //       return networkResults.animalList;
+  //     } catch (_) {
+  //       final isFetchPolicyNetworkPreferably =
+  //           fetchPolicy == AnimalFetchPolicy.networkPreferably;
+  //       if (cacheResults.isNotEmpty && isFetchPolicyNetworkPreferably) {
+  //         return cacheResults.map((e) => e.toDomainModel()).toList();
+  //       }
 
-        rethrow;
-      }
-    }
-  }
+  //       rethrow;
+  //     }
+  //   }
+  // }
 
   Future<AnimalListPage> _getAnimalsFromNetwork({
     String? name,
+    String? location,
     required int page,
     required int limit,
     required AnimalFetchPolicy fetchPolicy,
@@ -150,6 +155,7 @@ class AnimalRepository {
       page: page,
       name: name,
       limit: limit,
+      location: location,
     );
 
     final isFiltering = name != null;
