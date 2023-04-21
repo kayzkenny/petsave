@@ -40,30 +40,6 @@ extension LocalStorageService on SharedPreferences {
     }
     return DateTime.now().millisecondsSinceEpoch > expiresIn;
   }
-
-  dynamic _getFromDisk(String key) {
-    final value = get(key);
-
-    return value;
-  }
-
-  void _saveToDisk<T>(String key, T content) {
-    if (content is String) {
-      setString(key, content);
-    }
-    if (content is bool) {
-      setBool(key, content);
-    }
-    if (content is int) {
-      setInt(key, content);
-    }
-    if (content is double) {
-      setDouble(key, content);
-    }
-    if (content is List<String>) {
-      setStringList(key, content);
-    }
-  }
 }
 
 class UserRepository {
@@ -71,9 +47,19 @@ class UserRepository {
   final SharedPreferences sharedPreferences;
   final PetFinderApi remoteApi;
 
-  // sign in the user using the petfinder api and save the access token in shared preferences
+  // sign out the user by removing the access token from shared preferences
+  Future<void> signOut() async {
+    await sharedPreferences.remove(LocalStorageService.accessTokenKey);
+    await sharedPreferences.remove(LocalStorageService.expiresInKey);
+  }
 
-  Future<void> signIn() async {
+  // check is the user is signed in
+  bool isSignedIn() {
+    return !sharedPreferences.isAccessTokenExpired();
+  }
+
+  // refresh the access token
+  Future<void> refreshToken() async {
     final response = await remoteApi.getAuthToken(
       clientId: ApiConstants.clientId,
       clientSecret: ApiConstants.clientSecret,
@@ -85,12 +71,6 @@ class UserRepository {
     }
     await sharedPreferences.saveAccessToken(response.accessToken!);
     await sharedPreferences.saveExpiresIn(response.expiresIn!);
-  }
-
-  // sign out the user by removing the access token from shared preferences
-  Future<void> signOut() async {
-    await sharedPreferences.remove(LocalStorageService.accessTokenKey);
-    await sharedPreferences.remove(LocalStorageService.expiresInKey);
   }
 }
 

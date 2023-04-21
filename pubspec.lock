@@ -32,6 +32,13 @@ packages:
       relative: true
     source: path
     version: "0.0.0"
+  animals_near_you:
+    dependency: "direct main"
+    description:
+      path: "packages/features/animals_near_you"
+      relative: true
+    source: path
+    version: "0.0.0"
   args:
     dependency: transitive
     description:

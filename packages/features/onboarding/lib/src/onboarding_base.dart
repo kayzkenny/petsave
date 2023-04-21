@@ -1,5 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:user_repository/user_repository.dart';
 
 final List<String> imgList = [
   'assets/images/creature_dog-and-bone.png',
@@ -19,15 +22,17 @@ final List<String> subheadingList = [
   'Find pets to adopt from nearby your place...',
 ];
 
-class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+class OnboardingPage extends ConsumerStatefulWidget {
+  const OnboardingPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _OnboardingScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _OnboardingPageScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingPageScreenState extends ConsumerState<OnboardingPage> {
   int _current = 0;
+  bool refreshingAccessToken = false;
   final CarouselController _controller = CarouselController();
 
   @override
@@ -226,15 +231,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       fontWeight: FontWeight.w300,
                     ),
                   ),
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const SignInPage(),
-                    //   ),
-                    // );
+                  onPressed: () async {
+                    void callback() {
+                      context.go('/animals');
+                    }
+
+                    setState(() {
+                      refreshingAccessToken = true;
+                    });
+
+                    // sign in
+                    await ref.read(userRepositoryPod).refreshToken();
+
+                    setState(() {
+                      refreshingAccessToken = false;
+                    });
+                    // navigate to the animals page
+                    callback();
+                    // context.goNamed('/animals');
                   },
-                  child: const Text('Skip'),
+                  child: refreshingAccessToken
+                      ? const CircularProgressIndicator()
+                      : const Text('Skip'),
                 ),
                 const SizedBox(height: 24),
               ],

@@ -1,41 +1,49 @@
-import 'package:animal_repository/animal_repository.dart';
-import 'package:domain_models/domain_models.dart';
+import 'dart:async';
+
+import 'package:animals_near_you/animals_near_you.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:onboarding/onboarding.dart';
+import 'package:petsave/src/app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
 import 'package:user_repository/user_repository.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final sharedPreferences = await SharedPreferences.getInstance();
+  await runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      final sharedPreferences = await SharedPreferences.getInstance();
 
-  runApp(
-    ProviderScope(
-      overrides: [
-        // override the previous value with the new object
-        sharedPreferencesServiceProvider.overrideWithValue(sharedPreferences),
-      ],
-      child: const MyApp(),
-    ),
+      runApp(
+        ProviderScope(
+          overrides: [
+            // override the previous value with the new object
+            sharedPreferencesServiceProvider
+                .overrideWithValue(sharedPreferences),
+          ],
+          child: const MyApp(),
+        ),
+      );
+
+      // * This code will present some error UI if any uncaught exception happens
+      FlutterError.onError = (FlutterErrorDetails details) {
+        FlutterError.presentError(details);
+      };
+      ErrorWidget.builder = (FlutterErrorDetails details) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.red,
+            title: const Text('An error occurred'),
+          ),
+          body: Center(child: Text(details.toString())),
+        );
+      };
+    },
+    (Object error, StackTrace stack) {
+      // * Log any errors to console
+      debugPrint(error.toString());
+    },
   );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-            // primarySwatch: Colors.blue,
-            ),
-        // home: const SignInPage(),
-        home: const OnboardingScreen());
-  }
 }
 
 class SignInPage extends ConsumerStatefulWidget {
@@ -62,13 +70,13 @@ class _SignInPageState extends ConsumerState<SignInPage> {
             void callback() {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const AnimalsPage(title: 'Animals'),
+                  builder: (context) => const AnimalsNearYouPage(),
                 ),
               );
             }
 
             // sign in
-            await ref.read(userRepositoryPod).signIn();
+            await ref.read(userRepositoryPod).refreshToken();
             // navigate to the animals page
             callback();
           },
@@ -76,87 +84,5 @@ class _SignInPageState extends ConsumerState<SignInPage> {
         ),
       ),
     );
-  }
-}
-
-class AnimalsPage extends ConsumerStatefulWidget {
-  const AnimalsPage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  ConsumerState<AnimalsPage> createState() => _AnimalsPageState();
-}
-
-class _AnimalsPageState extends ConsumerState<AnimalsPage> {
-  static const _pageSize = 20;
-
-  final PagingController<int, Animal> _pagingController =
-      PagingController(firstPageKey: 1);
-
-  @override
-  void initState() {
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
-    super.initState();
-  }
-
-  Future<void> _fetchPage(int pageKey) async {
-    final animalstream = await ref.read(animalRepositoryPod.future).then(
-          (value) => value.getAnimalListStream(
-            page: pageKey,
-            limit: _pageSize,
-            fetchPolicy: AnimalFetchPolicy.cacheAndNetwork,
-          ),
-        );
-    // Stream<List<Animal>> characterStream =
-    //     RemoteApi.getCharacterStream(pageKey, _pageSize);
-    animalstream.listen((newItems) {
-      final isLastPage = newItems.length < _pageSize;
-      if (isLastPage) {
-        _pagingController.appendLastPage(newItems);
-      } else {
-        final nextPageKey = pageKey + newItems.length;
-        _pagingController.appendPage(newItems, nextPageKey);
-      }
-    }, onError: (error) {
-      _pagingController.error = error;
-    });
-  }
-
-  Future<void> _refresh() async {
-    // Reset the paging controller to the first page.
-    _pagingController.refresh();
-    // Fetch the first page of data again.
-    await _fetchPage(_pagingController.firstPageKey);
-  }
-
-  @override
-  Widget build(BuildContext context) =>
-      // Don't worry about displaying progress or error indicators on screen; the
-      // package takes care of that. If you want to customize them, use the
-      // [PagedChildBuilderDelegate] properties.
-      Scaffold(
-        appBar: AppBar(
-          title: const Text('Aniamls Near You'),
-          centerTitle: true,
-        ),
-        body: RefreshIndicator(
-          onRefresh: _refresh,
-          child: PagedListView<int, Animal>(
-            pagingController: _pagingController,
-            builderDelegate: PagedChildBuilderDelegate<Animal>(
-              itemBuilder: (context, item, index) =>
-                  Text(item.name ?? 'No name'),
-            ),
-          ),
-        ),
-      );
-
-  @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
   }
 }
