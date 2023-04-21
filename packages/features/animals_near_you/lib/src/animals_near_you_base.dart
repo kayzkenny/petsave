@@ -60,24 +60,14 @@ class _AnimalsNearYouPageState extends ConsumerState<AnimalsNearYouPage> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      // Don't worry about displaying progress or error indicators on screen; the
-      // package takes care of that. If you want to customize them, use the
-      // [PagedChildBuilderDelegate] properties.
-      Scaffold(
-        appBar: AppBar(
-          title: const Text('Aniamls Near You'),
-          centerTitle: true,
-        ),
-        body: RefreshIndicator(
-          onRefresh: _refresh,
-          child: PagedListView<int, Animal>(
-            pagingController: _pagingController,
-            builderDelegate: PagedChildBuilderDelegate<Animal>(
-              itemBuilder: (context, animal, index) {
-                return AnimalRow(animal: animal);
-              },
-            ),
+  Widget build(BuildContext context) => RefreshIndicator(
+        onRefresh: _refresh,
+        child: PagedListView<int, Animal>(
+          pagingController: _pagingController,
+          builderDelegate: PagedChildBuilderDelegate<Animal>(
+            itemBuilder: (context, animal, index) {
+              return AnimalRow(animal: animal);
+            },
           ),
         ),
       );

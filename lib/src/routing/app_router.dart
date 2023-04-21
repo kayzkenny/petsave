@@ -1,7 +1,7 @@
-import 'package:animals_near_you/animals_near_you.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:onboarding/onboarding.dart';
+import 'package:petsave/src/home.dart';
 import 'package:user_repository/user_repository.dart';
 
 /// All the routes in the app
@@ -11,6 +11,9 @@ enum AppRoute {
 
   /// Animals near you
   animalsNearYou,
+
+  /// home
+  home,
 }
 
 /// gorouter provider
@@ -40,9 +43,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         // },
         routes: [
           GoRoute(
-            path: 'animals',
-            name: AppRoute.animalsNearYou.name,
-            builder: (context, state) => const AnimalsNearYouPage(),
+            path: 'home',
+            name: AppRoute.home.name,
+            builder: (context, state) => const HomePage(),
           ),
         ],
       )
