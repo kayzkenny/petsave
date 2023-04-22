@@ -1,17 +1,174 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:animal_repository/animal_repository.dart';
 import 'package:domain_models/domain_models.dart';
 
-class AnimalsNearYouPage extends ConsumerStatefulWidget {
-  const AnimalsNearYouPage({super.key});
+class AsyncValueWidget<T> extends StatelessWidget {
+  /// Constructor for [AsyncValueWidget].
+  const AsyncValueWidget({super.key, required this.value, required this.data});
+
+  /// Async value to display.
+  final AsyncValue<T> value;
+
+  /// Widget to display when the async value is data.
+  final Widget Function(T) data;
 
   @override
-  ConsumerState<AnimalsNearYouPage> createState() => _AnimalsNearYouPageState();
+  Widget build(BuildContext context) {
+    return value.when(
+      data: data,
+      error: (e, st) => Center(child: Text(e.toString())),
+      loading: () => const Center(child: CircularProgressIndicator()),
+    );
+  }
 }
 
-class _AnimalsNearYouPageState extends ConsumerState<AnimalsNearYouPage> {
+final locationPermissionProvider =
+    FutureProvider<LocationPermission>((ref) async {
+  return Geolocator.checkPermission();
+});
+
+final currentPositionProvider = FutureProvider<Position>((ref) async {
+  return Geolocator.getCurrentPosition();
+});
+
+class AnimalsNearYouPage extends StatelessWidget {
+  const AnimalsNearYouPage({super.key});
+
+  Future<Position> _determinePosition() async {
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.lowest);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) {
+        final locationPermissionValue = ref.watch(locationPermissionProvider);
+
+        return locationPermissionValue.when(
+          data: (data) {
+            if (data == LocationPermission.denied ||
+                data == LocationPermission.deniedForever) {
+              return RequestLocationPermissionPage();
+            } else {
+              return FutureBuilder<Position>(
+                future: _determinePosition(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return AnimalsNearYouPageContents(position: snapshot.data);
+                  } else if (snapshot.hasError) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.error_outline,
+                          color: Colors.red,
+                          size: 60,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16),
+                          child: Text('Error: ${snapshot.error}'),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: CircularProgressIndicator(),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                          child: Text('Awaiting result...'),
+                        ),
+                      ],
+                    );
+                  }
+                },
+              );
+            }
+          },
+          error: (error, stackTrace) => Center(
+            child: Text(error.toString()),
+          ),
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class RequestLocationPermissionPage extends ConsumerWidget {
+  const RequestLocationPermissionPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Image.asset(
+          "assets/images/creature_dog-and-bone.png",
+          height: 200.0,
+          width: 200.0,
+        ),
+        SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          child: Text(
+            'To find pets near you, first you need to share your current location',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        SizedBox(height: 16),
+        ElevatedButton.icon(
+          onPressed: () async {
+            final permission = await Geolocator.requestPermission();
+            if (permission == LocationPermission.whileInUse ||
+                permission == LocationPermission.always) {
+              ref.invalidate(locationPermissionProvider);
+            }
+
+            if (permission == LocationPermission.deniedForever) {
+              await Geolocator.openAppSettings();
+              await Geolocator.openLocationSettings();
+            }
+          },
+          icon: Icon(Icons.near_me),
+          label: Text('Share Location'),
+        ),
+      ],
+    );
+  }
+}
+
+class AnimalsNearYouPageContents extends ConsumerStatefulWidget {
+  AnimalsNearYouPageContents({super.key, this.position});
+
+  final Position? position;
+
+  @override
+  ConsumerState<AnimalsNearYouPageContents> createState() =>
+      _AnimalsNearYouContentsPageState();
+}
+
+class _AnimalsNearYouContentsPageState
+    extends ConsumerState<AnimalsNearYouPageContents> {
   static const _pageSize = 20;
 
   final PagingController<int, Animal> _pagingController =
@@ -25,12 +182,23 @@ class _AnimalsNearYouPageState extends ConsumerState<AnimalsNearYouPage> {
     super.initState();
   }
 
+  @override
+  void didUpdateWidget(AnimalsNearYouPageContents oldWidget) {
+    if (oldWidget.position != widget.position) {
+      _pagingController.refresh();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
   Future<void> _fetchPage(int pageKey) async {
     final animalstream = await ref.read(animalRepositoryPod.future).then(
           (value) => value.getAnimalListStream(
             page: pageKey,
             limit: _pageSize,
             fetchPolicy: AnimalFetchPolicy.cacheAndNetwork,
+            location: widget.position == null
+                ? null
+                : '${widget.position?.latitude},${widget.position?.longitude}',
           ),
         );
     // Stream<List<Animal>> characterStream =
@@ -60,17 +228,19 @@ class _AnimalsNearYouPageState extends ConsumerState<AnimalsNearYouPage> {
   }
 
   @override
-  Widget build(BuildContext context) => RefreshIndicator(
-        onRefresh: _refresh,
-        child: PagedListView<int, Animal>(
-          pagingController: _pagingController,
-          builderDelegate: PagedChildBuilderDelegate<Animal>(
-            itemBuilder: (context, animal, index) {
-              return AnimalRow(animal: animal);
-            },
-          ),
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: _refresh,
+      child: PagedListView<int, Animal>(
+        pagingController: _pagingController,
+        builderDelegate: PagedChildBuilderDelegate<Animal>(
+          itemBuilder: (context, animal, index) {
+            return AnimalRow(animal: animal);
+          },
         ),
-      );
+      ),
+    );
+  }
 
   @override
   void dispose() {

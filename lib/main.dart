@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:animals_near_you/animals_near_you.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:petsave/src/app.dart';
@@ -44,45 +43,4 @@ void main() async {
       debugPrint(error.toString());
     },
   );
-}
-
-class SignInPage extends ConsumerStatefulWidget {
-  const SignInPage({super.key});
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _SignInPageState();
-}
-
-class _SignInPageState extends ConsumerState<SignInPage> {
-  @override
-  Widget build(BuildContext context) {
-    // use the petfinder api to sign in
-    // get the access token and store it in the shared preferences
-    // then navigate to the animals page
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sign In'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            void callback() {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const AnimalsNearYouPage(),
-                ),
-              );
-            }
-
-            // sign in
-            await ref.read(userRepositoryPod).refreshToken();
-            // navigate to the animals page
-            callback();
-          },
-          child: const Text('Sign In'),
-        ),
-      ),
-    );
-  }
 }
