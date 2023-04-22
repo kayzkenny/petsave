@@ -9,12 +9,10 @@ class PetfinderApiInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     options.headers['Content-Type'] = 'application/json';
-    print(options.path);
 
     if (!options.path.startsWith('/oauth2')) {
       final sp = await SharedPreferences.getInstance();
       final token = sp.getString('accessTokenKey');
-      print(token);
       if (token != null) {
         options.headers['Authorization'] = 'Bearer $token';
       }

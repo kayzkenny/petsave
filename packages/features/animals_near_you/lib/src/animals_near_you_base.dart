@@ -1,29 +1,11 @@
+import 'package:animals_near_you/src/animal_row.dart';
+import 'package:animals_near_you/src/request_location_permission_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:animal_repository/animal_repository.dart';
 import 'package:domain_models/domain_models.dart';
-
-class AsyncValueWidget<T> extends StatelessWidget {
-  /// Constructor for [AsyncValueWidget].
-  const AsyncValueWidget({super.key, required this.value, required this.data});
-
-  /// Async value to display.
-  final AsyncValue<T> value;
-
-  /// Widget to display when the async value is data.
-  final Widget Function(T) data;
-
-  @override
-  Widget build(BuildContext context) {
-    return value.when(
-      data: data,
-      error: (e, st) => Center(child: Text(e.toString())),
-      loading: () => const Center(child: CircularProgressIndicator()),
-    );
-  }
-}
 
 final locationPermissionProvider =
     FutureProvider<LocationPermission>((ref) async {
@@ -106,53 +88,6 @@ class AnimalsNearYouPage extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class RequestLocationPermissionPage extends ConsumerWidget {
-  const RequestLocationPermissionPage({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.asset(
-          "assets/images/creature_dog-and-bone.png",
-          height: 200.0,
-          width: 200.0,
-        ),
-        SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
-          child: Text(
-            'To find pets near you, first you need to share your current location',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        SizedBox(height: 16),
-        ElevatedButton.icon(
-          onPressed: () async {
-            final permission = await Geolocator.requestPermission();
-            if (permission == LocationPermission.whileInUse ||
-                permission == LocationPermission.always) {
-              ref.invalidate(locationPermissionProvider);
-            }
-
-            if (permission == LocationPermission.deniedForever) {
-              await Geolocator.openAppSettings();
-              await Geolocator.openLocationSettings();
-            }
-          },
-          icon: Icon(Icons.near_me),
-          label: Text('Share Location'),
-        ),
-      ],
     );
   }
 }
@@ -246,112 +181,5 @@ class _AnimalsNearYouContentsPageState
   void dispose() {
     _pagingController.dispose();
     super.dispose();
-  }
-}
-
-class AnimalRow extends StatelessWidget {
-  const AnimalRow({
-    required this.animal,
-    super.key,
-  });
-  final Animal animal;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          animal.photos?.isEmpty ?? true
-              ? FlutterLogo(size: 100.0)
-              : Image.network(
-                  animal.photos![0].medium!,
-                  width: 100.0,
-                  fit: BoxFit.fill,
-                  loadingBuilder: (context, child, loadingProgress) =>
-                      loadingProgress == null
-                          ? child
-                          : Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes !=
-                                        null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
-                              ),
-                            ),
-                ),
-          SizedBox(width: 16.0),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${animal.name}',
-                  style: TextStyle(fontSize: 18.0),
-                ),
-                Text(
-                  '${animal.breeds?.primary} ${animal.type}',
-                  style: TextStyle(fontSize: 16.0),
-                ),
-                SizedBox(height: 4.0),
-                if (animal.description != null) ...[
-                  Text(
-                    '${animal.description}',
-                    style: TextStyle(fontSize: 12.0),
-                  ),
-                  SizedBox(height: 8.0),
-                ],
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    PillWidget(
-                      label: '${animal.age}',
-                      color: Colors.lightBlue,
-                    ),
-                    SizedBox(width: 8.0),
-                    PillWidget(
-                      label: '${animal.gender}',
-                      color: Colors.lightGreen,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          // SizedBox(width: 16.0),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.chevron_right),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class PillWidget extends StatelessWidget {
-  final String label;
-  final Color color;
-  const PillWidget({super.key, required this.label, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
-        color: color,
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: Colors.grey[200],
-          fontSize: 12.0,
-          // fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
   }
 }

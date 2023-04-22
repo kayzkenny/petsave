@@ -9,10 +9,7 @@ part of 'petfinder_api_base.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
 class _PetFinderApi implements PetFinderApi {
-  _PetFinderApi(
-    this._dio, {
-    this.baseUrl,
-  });
+  _PetFinderApi(this._dio);
 
   final Dio _dio;
 

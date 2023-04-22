@@ -27,11 +27,12 @@ class AnimalRepository {
 
     if (shouldSkipCacheLookup) {
       final networkResults = await _getAnimalsFromNetwork(
-          name: name,
-          page: page,
-          limit: limit,
-          fetchPolicy: fetchPolicy,
-          location: location);
+        name: name,
+        page: page,
+        limit: limit,
+        fetchPolicy: fetchPolicy,
+        location: location,
+      );
 
       yield networkResults.animalList;
     } else {
@@ -60,11 +61,12 @@ class AnimalRepository {
 
       try {
         final networkResults = await _getAnimalsFromNetwork(
-            name: name,
-            page: page,
-            limit: limit,
-            fetchPolicy: fetchPolicy,
-            location: location);
+          name: name,
+          page: page,
+          limit: limit,
+          fetchPolicy: fetchPolicy,
+          location: location,
+        );
 
         yield networkResults.animalList;
       } catch (_) {
@@ -147,6 +149,7 @@ class AnimalRepository {
   Future<AnimalListPage> _getAnimalsFromNetwork({
     String? name,
     String? location,
+    int? distance = 500,
     required int page,
     required int limit,
     required AnimalFetchPolicy fetchPolicy,
@@ -156,6 +159,7 @@ class AnimalRepository {
       name: name,
       limit: limit,
       location: location,
+      distance: distance,
     );
 
     final isFiltering = name != null;

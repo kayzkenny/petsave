@@ -25,8 +25,11 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: Text(
           _selectedIndex == 0 ? 'Animals Near You' : 'Find your future pet',
+          style: const TextStyle(color: Colors.black),
         ),
       ),
       body: _widgetOptions.elementAt(_selectedIndex),

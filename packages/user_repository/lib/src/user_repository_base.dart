@@ -65,7 +65,6 @@ class UserRepository {
       clientSecret: ApiConstants.clientSecret,
       grantType: ApiConstants.grantType,
     );
-    print('access token: ${response.accessToken}');
     if (response.accessToken == null || response.expiresIn == null) {
       throw Exception('access token is null');
     }
