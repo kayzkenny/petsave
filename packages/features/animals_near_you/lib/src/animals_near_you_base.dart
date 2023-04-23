@@ -136,13 +136,10 @@ class _AnimalsNearYouContentsPageState
                 : '${widget.position?.latitude},${widget.position?.longitude}',
           ),
         );
-    // Stream<List<Animal>> characterStream =
-    //     RemoteApi.getCharacterStream(pageKey, _pageSize);
     animalstream.listen((newItems) {
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
-        // show a snackbar or any other notification that you've reached the end of the list
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Reached the end of the list')),
         );
