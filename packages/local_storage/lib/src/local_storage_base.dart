@@ -29,10 +29,23 @@ class LocalStorage {
     return query.findAll();
   }
 
+  // get a single animal from local storage
+  Future<AnimalCM?> getAnimal(int id) async {
+    final animal = await isar.animalCMs.get(id);
+    return animal;
+  }
+
   // insert animals into local storage
   Future<void> insertAnimals(List<AnimalCM> animals) async {
     await isar.writeTxn(() async {
       await isar.animalCMs.putAll(animals);
+    });
+  }
+
+  // insert single animal into local storage
+  Future<void> insertAnimal(AnimalCM animal) async {
+    await isar.writeTxn(() async {
+      await isar.animalCMs.put(animal);
     });
   }
 

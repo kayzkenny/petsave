@@ -126,7 +126,7 @@ class _AnimalsNearYouContentsPageState
   }
 
   Future<void> _fetchPage(int pageKey) async {
-    final animalstream = await ref.read(animalRepositoryPod.future).then(
+    final animalstream = await ref.read(animalRepositoryProvider.future).then(
           (value) => value.getAnimalListStream(
             page: pageKey,
             limit: _pageSize,

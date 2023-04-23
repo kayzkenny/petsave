@@ -195,6 +195,22 @@ class AnimalRepository {
 
     return results.toDomainModel();
   }
+
+  Future<Animal> getAnimalById(int id) async {
+    final animalFromCache = await localStorage.getAnimal(id);
+
+    if (animalFromCache != null) {
+      return animalFromCache.toDomainModel();
+    }
+
+    final animalFromNetwork = await remoteApi.getAnimalById(id: id.toString());
+
+    final animalToStoreInCache = animalFromNetwork.animal.toCacheModel();
+
+    await localStorage.insertAnimal(animalToStoreInCache);
+
+    return animalFromNetwork.animal.toDomainModel();
+  }
 }
 
 enum AnimalFetchPolicy {
