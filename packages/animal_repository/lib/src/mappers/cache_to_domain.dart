@@ -1,19 +1,16 @@
 import 'package:domain_models/domain_models.dart';
 import 'package:local_storage/local_storage.dart';
 
-// extension AnimalListPageCMToDomainList on List<AnimalCM> {
-//   AnimalListPage toDomainModel() {
-//     return AnimalListPage(
-//       pagination: Pagination(
-//         countPerPage: 10,
-//         totalCount: 10,
-//         currentPage: 1,
-//         totalPages: 1,
-//       ),
-//       animalList: map((e) => e.toDomainModel()).toList(),
-//     );
-//   }
-// }
+extension AnimalTypeCMToDomain on AnimalTypeCM {
+  AnimalTypes toDomainModel() {
+    return AnimalTypes(
+      name: name,
+      coats: coats,
+      colors: colors,
+      genders: genders,
+    );
+  }
+}
 
 extension AnimalCMToDomain on AnimalCM {
   Animal toDomainModel() {

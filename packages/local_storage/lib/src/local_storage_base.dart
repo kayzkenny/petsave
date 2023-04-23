@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:local_storage/src/models/animal_cm.dart';
+import 'package:local_storage/src/models/animal_type_cm.dart';
 import 'package:local_storage/src/models/organization_cm.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -63,6 +64,18 @@ class LocalStorage {
     return results;
   }
 
+  Future<List<AnimalTypeCM>> getAnimalTypes() async {
+    final results = await isar.animalTypeCMs.where().findAll();
+    return results;
+  }
+
+  // insert animals into local storage
+  Future<void> insertAnimalTypes(List<AnimalTypeCM> animalsTypes) async {
+    await isar.writeTxn(() async {
+      await isar.animalTypeCMs.putAll(animalsTypes);
+    });
+  }
+
   // returns a stream of the animals collection
   Stream<List<AnimalCM>> animalsStream() {
     return isar.animalCMs.where().watch();
@@ -71,7 +84,11 @@ class LocalStorage {
 
 final isarPod = FutureProvider((ref) async {
   final dir = await getApplicationDocumentsDirectory();
-  return Isar.open([AnimalCMSchema, OrganizationCMSchema], directory: dir.path);
+  return Isar.open([
+    AnimalCMSchema,
+    OrganizationCMSchema,
+    AnimalTypeCMSchema,
+  ], directory: dir.path);
 });
 
 final localStoragePod = FutureProvider<LocalStorage>((ref) async {

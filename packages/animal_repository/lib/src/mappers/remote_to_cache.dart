@@ -1,6 +1,16 @@
 import 'package:local_storage/local_storage.dart';
 import 'package:petfinder_api/petfinder_api.dart';
 
+extension AnimalTypesRMToCM on AnimalTypesRM {
+  AnimalTypeCM toCacheModel() {
+    return AnimalTypeCM()
+      ..name = name
+      ..coats = coats.toList()
+      ..colors = colors.toList()
+      ..genders = genders.toList();
+  }
+}
+
 extension AnimalRMToCM on AnimalRM {
   AnimalCM toCacheModel() {
     return AnimalCM()

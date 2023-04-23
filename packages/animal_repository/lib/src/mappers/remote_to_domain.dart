@@ -147,3 +147,14 @@ extension PhotosRMToDomain on PhotosRM {
     );
   }
 }
+
+extension AnimalTypesRMToDomain on AnimalTypesRM {
+  AnimalTypes toDomainModel() {
+    return AnimalTypes(
+      name: name,
+      coats: coats,
+      colors: colors,
+      genders: genders,
+    );
+  }
+}

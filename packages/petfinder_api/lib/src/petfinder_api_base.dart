@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:petfinder_api/src/models/response/animal_data_rm.dart';
 import 'package:petfinder_api/src/models/response/animal_list_page_rm.dart';
+import 'package:petfinder_api/src/models/response/animal_types_data_rm.dart';
+import 'package:petfinder_api/src/models/response/organization_data_rm.dart';
 import 'package:petfinder_api/src/models/response/organization_list_page_rm.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -47,6 +50,11 @@ abstract class PetFinderApi {
     @Query('limit') int? limit,
   });
 
+  @GET('/animals/{id}')
+  Future<AnimalDataRM> getAnimalById({
+    @Path('id') required String id,
+  });
+
   @GET('/organizations')
   Future<OrganizationListPageRM> getOrganizations({
     @Query('name') String? name,
@@ -58,6 +66,19 @@ abstract class PetFinderApi {
     @Query('sort') String? sort,
     @Query('limit') int? limit,
     @Query('page') int? page,
+  });
+
+  @GET('/organizations/{id}')
+  Future<OrganizationDataRM> getOrganizationById({
+    @Path('id') required String id,
+  });
+
+  @GET('/types')
+  Future<AnimalTypesDataRM> getAnimalTypes();
+
+  @GET('/types/{type}')
+  Future<AnimalDataRM> getSingleAnimalType({
+    @Path('type') required String type,
   });
 }
 

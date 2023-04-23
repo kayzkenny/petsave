@@ -82,6 +82,23 @@ class AnimalRepository {
     }
   }
 
+  Future<List<AnimalTypes>> getAnimalTypes() async {
+    final animalTypesFromCache = await localStorage.getAnimalTypes();
+
+    if (animalTypesFromCache.isNotEmpty) {
+      return animalTypesFromCache.map((e) => e.toDomainModel()).toList();
+    }
+
+    final animalTypesFromNetwork = await remoteApi.getAnimalTypes();
+
+    final animalTypesToStoreInCache =
+        animalTypesFromNetwork.types.map((e) => e.toCacheModel()).toList();
+
+    await localStorage.insertAnimalTypes(animalTypesToStoreInCache);
+
+    return animalTypesFromNetwork.types.map((e) => e.toDomainModel()).toList();
+  }
+
   // Future<List<Animal>> getAnimalListPaged({
   //   String? name,
   //   String? location,

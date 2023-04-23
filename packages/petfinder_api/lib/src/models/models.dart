@@ -1,6 +1,10 @@
 export 'response/address_rm.dart';
 export 'response/animal_list_page_rm.dart';
 export 'response/animal_rm.dart';
+export 'response/animal_data_rm.dart';
+export 'response/animal_types_rm.dart';
+export 'response/animal_types_data_rm.dart';
+export 'response/animal_single_type_data_rm.dart';
 export 'response/attributes_rm.dart';
 export 'response/breeds_rm.dart';
 export 'response/colors_rm.dart';
@@ -8,6 +12,7 @@ export 'response/contact_rm.dart';
 export 'response/environment_rm.dart';
 export 'response/organization_rm.dart';
 export 'response/organization_list_page_rm.dart';
+export 'response/organization_data_rm.dart';
 export 'response/pagination_rm.dart';
 export 'response/photos_rm.dart';
 export 'response/videos_rm.dart';
