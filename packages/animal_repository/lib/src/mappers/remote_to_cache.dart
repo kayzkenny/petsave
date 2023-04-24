@@ -34,7 +34,8 @@ extension AnimalRMToCM on AnimalRM {
       ..environment = environment?.toCacheModel()
       ..tags = tags
       ..publishedAt = publishedAt
-      ..distance = distance;
+      ..distance = distance
+      ..contact = contact?.toCacheModel();
   }
 }
 
@@ -118,5 +119,14 @@ extension PhotosRMToCM on PhotosRM {
       ..medium = medium
       ..large = large
       ..full = full;
+  }
+}
+
+extension ContactRMToCM on ContactRM {
+  ContactCM toCacheModel() {
+    return ContactCM()
+      ..email = email
+      ..phone = phone
+      ..address = address?.toCacheModel();
   }
 }

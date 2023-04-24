@@ -54,6 +54,7 @@ extension AnimalRMToDomain on AnimalRM {
       tags: tags,
       publishedAt: publishedAt,
       distance: distance,
+      contact: contact?.toDomainModel(),
     );
   }
 }
@@ -155,6 +156,16 @@ extension AnimalTypesRMToDomain on AnimalTypesRM {
       coats: coats,
       colors: colors,
       genders: genders,
+    );
+  }
+}
+
+extension ContactRMToDomain on ContactRM {
+  Contact toDomainModel() {
+    return Contact(
+      email: email,
+      phone: phone,
+      address: address?.toDomainModel(),
     );
   }
 }

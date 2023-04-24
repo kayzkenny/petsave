@@ -28,13 +28,3 @@ class OrganizationCM {
   @Name("photos")
   List<PhotosCM>? photos;
 }
-
-@embedded
-class AddressCM {
-  String? address1;
-  String? address2;
-  String? city;
-  String? state;
-  String? postcode;
-  String? country;
-}

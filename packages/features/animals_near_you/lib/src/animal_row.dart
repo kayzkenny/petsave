@@ -1,6 +1,5 @@
 import 'package:domain_models/domain_models.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class AnimalRow extends StatelessWidget {
   const AnimalRow({
@@ -104,11 +103,7 @@ class AnimalRow extends StatelessWidget {
               ],
             ),
           ),
-          // SizedBox(width: 16.0),
-          IconButton(
-            onPressed: () => context.push('/animals/${animal.id}'),
-            icon: Icon(Icons.chevron_right),
-          ),
+          Icon(Icons.chevron_right)
         ],
       ),
     );

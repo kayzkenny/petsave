@@ -1,10 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:petfinder_api/src/models/response/attributes_rm.dart';
-import 'package:petfinder_api/src/models/response/breeds_rm.dart';
-import 'package:petfinder_api/src/models/response/colors_rm.dart';
-import 'package:petfinder_api/src/models/response/environment_rm.dart';
-import 'package:petfinder_api/src/models/response/photos_rm.dart';
-import 'package:petfinder_api/src/models/response/videos_rm.dart';
+import 'package:petfinder_api/petfinder_api.dart';
 
 part 'animal_rm.g.dart';
 
@@ -32,6 +27,7 @@ class AnimalRM {
     this.tags,
     this.publishedAt,
     this.distance,
+    this.contact,
   });
 
   final int? id;
@@ -57,6 +53,7 @@ class AnimalRM {
   @JsonKey(name: 'published_at')
   final DateTime? publishedAt;
   final double? distance;
+  final ContactRM? contact;
 
   static const fromJson = _$AnimalRMFromJson;
 }

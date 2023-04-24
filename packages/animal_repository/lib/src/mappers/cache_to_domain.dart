@@ -36,6 +36,7 @@ extension AnimalCMToDomain on AnimalCM {
       tags: tags,
       publishedAt: publishedAt,
       distance: distance,
+      contact: contact?.toDomainModel(),
     );
   }
 }
@@ -126,6 +127,16 @@ extension AddressCMToDomain on AddressCM {
       state: state,
       postcode: postcode,
       country: country,
+    );
+  }
+}
+
+extension ContactCMToDomain on ContactCM {
+  Contact toDomainModel() {
+    return Contact(
+      email: email,
+      phone: phone,
+      address: address?.toDomainModel(),
     );
   }
 }

@@ -42,4 +42,7 @@ AnimalRM _$AnimalRMFromJson(Map<String, dynamic> json) => AnimalRM(
           ? null
           : DateTime.parse(json['published_at'] as String),
       distance: (json['distance'] as num?)?.toDouble(),
+      contact: json['contact'] == null
+          ? null
+          : ContactRM.fromJson(json['contact'] as Map<String, dynamic>),
     );

@@ -3,6 +3,7 @@ import 'package:animals_near_you/src/request_location_permission_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:animal_repository/animal_repository.dart';
 import 'package:domain_models/domain_models.dart';
@@ -167,7 +168,10 @@ class _AnimalsNearYouContentsPageState
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<Animal>(
           itemBuilder: (context, animal, index) {
-            return AnimalRow(animal: animal);
+            return GestureDetector(
+              onTap: () => context.push('/animals/${animal.id}'),
+              child: AnimalRow(animal: animal),
+            );
           },
         ),
       ),

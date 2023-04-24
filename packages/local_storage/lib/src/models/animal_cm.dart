@@ -47,6 +47,8 @@ class AnimalCM {
   DateTime? publishedAt;
   @Name("distance")
   double? distance;
+  @Name("contact")
+  ContactCM? contact;
 }
 
 @embedded
@@ -91,4 +93,21 @@ class EnvironmentCM {
   bool? children;
   bool? dogs;
   bool? cats;
+}
+
+@embedded
+class ContactCM {
+  String? email;
+  String? phone;
+  AddressCM? address;
+}
+
+@embedded
+class AddressCM {
+  String? address1;
+  String? address2;
+  String? city;
+  String? state;
+  String? postcode;
+  String? country;
 }

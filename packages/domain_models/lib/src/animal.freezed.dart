@@ -37,6 +37,7 @@ mixin _$Animal {
   List<String>? get tags => throw _privateConstructorUsedError;
   DateTime? get publishedAt => throw _privateConstructorUsedError;
   double? get distance => throw _privateConstructorUsedError;
+  Contact? get contact => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AnimalCopyWith<Animal> get copyWith => throw _privateConstructorUsedError;
@@ -68,12 +69,14 @@ abstract class $AnimalCopyWith<$Res> {
       Environment? environment,
       List<String>? tags,
       DateTime? publishedAt,
-      double? distance});
+      double? distance,
+      Contact? contact});
 
   $BreedsCopyWith<$Res>? get breeds;
   $AnimalColorsCopyWith<$Res>? get colors;
   $AttributesCopyWith<$Res>? get attributes;
   $EnvironmentCopyWith<$Res>? get environment;
+  $ContactCopyWith<$Res>? get contact;
 }
 
 /// @nodoc
@@ -110,6 +113,7 @@ class _$AnimalCopyWithImpl<$Res, $Val extends Animal>
     Object? tags = freezed,
     Object? publishedAt = freezed,
     Object? distance = freezed,
+    Object? contact = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -196,6 +200,10 @@ class _$AnimalCopyWithImpl<$Res, $Val extends Animal>
           ? _value.distance
           : distance // ignore: cast_nullable_to_non_nullable
               as double?,
+      contact: freezed == contact
+          ? _value.contact
+          : contact // ignore: cast_nullable_to_non_nullable
+              as Contact?,
     ) as $Val);
   }
 
@@ -246,6 +254,18 @@ class _$AnimalCopyWithImpl<$Res, $Val extends Animal>
       return _then(_value.copyWith(environment: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ContactCopyWith<$Res>? get contact {
+    if (_value.contact == null) {
+      return null;
+    }
+
+    return $ContactCopyWith<$Res>(_value.contact!, (value) {
+      return _then(_value.copyWith(contact: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -275,7 +295,8 @@ abstract class _$$_AnimalCopyWith<$Res> implements $AnimalCopyWith<$Res> {
       Environment? environment,
       List<String>? tags,
       DateTime? publishedAt,
-      double? distance});
+      double? distance,
+      Contact? contact});
 
   @override
   $BreedsCopyWith<$Res>? get breeds;
@@ -285,6 +306,8 @@ abstract class _$$_AnimalCopyWith<$Res> implements $AnimalCopyWith<$Res> {
   $AttributesCopyWith<$Res>? get attributes;
   @override
   $EnvironmentCopyWith<$Res>? get environment;
+  @override
+  $ContactCopyWith<$Res>? get contact;
 }
 
 /// @nodoc
@@ -318,6 +341,7 @@ class __$$_AnimalCopyWithImpl<$Res>
     Object? tags = freezed,
     Object? publishedAt = freezed,
     Object? distance = freezed,
+    Object? contact = freezed,
   }) {
     return _then(_$_Animal(
       id: freezed == id
@@ -404,6 +428,10 @@ class __$$_AnimalCopyWithImpl<$Res>
           ? _value.distance
           : distance // ignore: cast_nullable_to_non_nullable
               as double?,
+      contact: freezed == contact
+          ? _value.contact
+          : contact // ignore: cast_nullable_to_non_nullable
+              as Contact?,
     ));
   }
 }
@@ -432,7 +460,8 @@ class _$_Animal implements _Animal {
       this.environment,
       final List<String>? tags,
       this.publishedAt,
-      this.distance})
+      this.distance,
+      this.contact})
       : _photos = photos,
         _videos = videos,
         _tags = tags;
@@ -503,10 +532,12 @@ class _$_Animal implements _Animal {
   final DateTime? publishedAt;
   @override
   final double? distance;
+  @override
+  final Contact? contact;
 
   @override
   String toString() {
-    return 'Animal(id: $id, organizationId: $organizationId, url: $url, type: $type, species: $species, breeds: $breeds, colors: $colors, age: $age, gender: $gender, size: $size, coat: $coat, name: $name, description: $description, photos: $photos, videos: $videos, status: $status, attributes: $attributes, environment: $environment, tags: $tags, publishedAt: $publishedAt, distance: $distance)';
+    return 'Animal(id: $id, organizationId: $organizationId, url: $url, type: $type, species: $species, breeds: $breeds, colors: $colors, age: $age, gender: $gender, size: $size, coat: $coat, name: $name, description: $description, photos: $photos, videos: $videos, status: $status, attributes: $attributes, environment: $environment, tags: $tags, publishedAt: $publishedAt, distance: $distance, contact: $contact)';
   }
 
   @override
@@ -540,7 +571,8 @@ class _$_Animal implements _Animal {
             (identical(other.publishedAt, publishedAt) ||
                 other.publishedAt == publishedAt) &&
             (identical(other.distance, distance) ||
-                other.distance == distance));
+                other.distance == distance) &&
+            (identical(other.contact, contact) || other.contact == contact));
   }
 
   @override
@@ -566,7 +598,8 @@ class _$_Animal implements _Animal {
         environment,
         const DeepCollectionEquality().hash(_tags),
         publishedAt,
-        distance
+        distance,
+        contact
       ]);
 
   @JsonKey(ignore: true)
@@ -598,7 +631,8 @@ abstract class _Animal implements Animal {
       final Environment? environment,
       final List<String>? tags,
       final DateTime? publishedAt,
-      final double? distance}) = _$_Animal;
+      final double? distance,
+      final Contact? contact}) = _$_Animal;
 
   @override
   int? get id;
@@ -642,6 +676,8 @@ abstract class _Animal implements Animal {
   DateTime? get publishedAt;
   @override
   double? get distance;
+  @override
+  Contact? get contact;
   @override
   @JsonKey(ignore: true)
   _$$_AnimalCopyWith<_$_Animal> get copyWith =>

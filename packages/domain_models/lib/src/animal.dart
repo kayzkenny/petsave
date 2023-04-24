@@ -1,11 +1,5 @@
+import 'package:domain_models/domain_models.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import 'attributes.dart';
-import 'breeds.dart';
-import 'colors.dart';
-import 'environment.dart';
-import 'photos.dart';
-import 'videos.dart';
 
 part 'animal.freezed.dart';
 
@@ -33,5 +27,6 @@ class Animal with _$Animal {
     List<String>? tags,
     DateTime? publishedAt,
     double? distance,
+    Contact? contact,
   }) = _Animal;
 }
