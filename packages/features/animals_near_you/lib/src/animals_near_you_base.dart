@@ -26,7 +26,7 @@ class AnimalsNearYouPage extends StatelessWidget {
       return Future.error('Location services are disabled.');
     }
     return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.lowest);
+        desiredAccuracy: LocationAccuracy.medium);
   }
 
   @override
@@ -126,12 +126,14 @@ class _AnimalsNearYouContentsPageState
     super.didUpdateWidget(oldWidget);
   }
 
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchPage(int pageKey, {bool isRefreshing = false}) async {
     final animalstream = await ref.read(animalRepositoryProvider.future).then(
           (value) => value.getAnimalListStream(
             page: pageKey,
             limit: _pageSize,
-            fetchPolicy: AnimalFetchPolicy.cacheAndNetwork,
+            fetchPolicy: isRefreshing
+                ? AnimalFetchPolicy.networkOnly
+                : AnimalFetchPolicy.cacheAndNetwork,
             location: widget.position == null
                 ? null
                 : '${widget.position?.latitude},${widget.position?.longitude}',
@@ -157,7 +159,7 @@ class _AnimalsNearYouContentsPageState
     // Reset the paging controller to the first page.
     _pagingController.refresh();
     // Fetch the first page of data again.
-    await _fetchPage(_pagingController.firstPageKey);
+    await _fetchPage(_pagingController.firstPageKey, isRefreshing: true);
   }
 
   @override

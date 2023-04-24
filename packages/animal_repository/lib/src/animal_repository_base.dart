@@ -36,11 +36,6 @@ class AnimalRepository {
 
       yield networkResults.animalList;
     } else {
-      // final cacheResults = await localStorage.animalsPaginated(
-      //   page: page,
-      //   limit: limit,
-      // );
-
       final cacheResults = await localStorage.getAllAnimals();
 
       final isFetchPolicyCacheAndNetwork =
