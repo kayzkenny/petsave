@@ -81,12 +81,8 @@ class AnimalsNearYouPage extends StatelessWidget {
               );
             }
           },
-          error: (error, stackTrace) => Center(
-            child: Text(error.toString()),
-          ),
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
-          ),
+          error: (error, stackTrace) => Center(child: Text(error.toString())),
+          loading: () => const Center(child: CircularProgressIndicator()),
         );
       },
     );
@@ -174,9 +170,7 @@ class _AnimalsNearYouContentsPageState
       onRefresh: _refresh,
       child: PagedListView<int, Animal>.separated(
         pagingController: _pagingController,
-        separatorBuilder: (context, index) => const Divider(
-          indent: 136,
-        ),
+        separatorBuilder: (context, index) => const Divider(indent: 136),
         builderDelegate: PagedChildBuilderDelegate<Animal>(
           itemBuilder: (context, animal, index) {
             return GestureDetector(
