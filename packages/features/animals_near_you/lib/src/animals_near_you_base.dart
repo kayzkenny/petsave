@@ -147,6 +147,12 @@ class _AnimalsNearYouContentsPageState
           SnackBar(content: Text('Reached the end of the list')),
         );
       } else {
+        if (pageKey == 1 &&
+            _pagingController.itemList != null &&
+            _pagingController.itemList!.isNotEmpty) {
+          // We were previewing the page from the cache, so we need to clear the list
+          _pagingController.itemList?.clear();
+        }
         final nextPageKey = pageKey + newItems.length;
         _pagingController.appendPage(newItems, nextPageKey);
       }

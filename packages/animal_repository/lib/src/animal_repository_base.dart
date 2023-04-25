@@ -47,7 +47,9 @@ class AnimalRepository {
       final shouldEmitCachedPageInAdvance =
           isFetchPolicyCachePreferably || isFetchPolicyCacheAndNetwork;
 
-      if (shouldEmitCachedPageInAdvance && cacheResults.isNotEmpty) {
+      if (shouldEmitCachedPageInAdvance &&
+          cacheResults.isNotEmpty &&
+          page == 1) {
         yield cacheResults.map((e) => e.toDomainModel()).toList();
         if (isFetchPolicyCachePreferably) {
           return;
