@@ -31,6 +31,12 @@ class AnimalRow extends StatelessWidget {
           backgroundColor: Colors.orange.shade100,
           textColor: Colors.orange,
         );
+      case 'Senior':
+        return PillWidget(
+          label: 'Senior',
+          backgroundColor: Colors.purple.shade100,
+          textColor: Colors.purple,
+        );
       default:
         return PillWidget(
           label: 'Unknown',

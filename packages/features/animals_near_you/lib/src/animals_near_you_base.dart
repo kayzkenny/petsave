@@ -127,7 +127,7 @@ class _AnimalsNearYouContentsPageState
   }
 
   Future<void> _fetchPage(int pageKey, {bool isRefreshing = false}) async {
-    final animalstream = await ref.read(animalRepositoryProvider.future).then(
+    final animalstream = await ref.watch(animalRepositoryProvider.future).then(
           (value) => value.getAnimalListStream(
             page: pageKey,
             limit: _pageSize,
@@ -150,7 +150,7 @@ class _AnimalsNearYouContentsPageState
         if (pageKey == 1 &&
             _pagingController.itemList != null &&
             _pagingController.itemList!.isNotEmpty) {
-          // We were previewing the page from the cache, so we need to clear the list
+          // We were previewing the list from the cache, so we need to clear it
           _pagingController.itemList?.clear();
         }
         final nextPageKey = pageKey + newItems.length;
@@ -172,8 +172,11 @@ class _AnimalsNearYouContentsPageState
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: _refresh,
-      child: PagedListView<int, Animal>(
+      child: PagedListView<int, Animal>.separated(
         pagingController: _pagingController,
+        separatorBuilder: (context, index) => const Divider(
+          indent: 136,
+        ),
         builderDelegate: PagedChildBuilderDelegate<Animal>(
           itemBuilder: (context, animal, index) {
             return GestureDetector(
