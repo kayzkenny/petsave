@@ -9,3 +9,16 @@
 //   case scalesFinsAndOther = "scales, fins & other"
 //   case barnyard
 // }
+
+// create an enum from the example above
+enum AnimalSearchType {
+  none,
+  cat,
+  dog,
+  rabbit,
+  smallAndFurry,
+  horse,
+  bird,
+  scalesFinsAndOther,
+  barnyard,
+}
