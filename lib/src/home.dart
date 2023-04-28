@@ -1,38 +1,15 @@
 import 'package:animals_near_you/animals_near_you.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
-    AnimalsNearYouPage(),
-    Center(child: Text('Search Page')),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+class HomePage extends StatelessWidget {
+  const HomePage({super.key, required this.child});
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Text(
-          _selectedIndex == 0 ? 'Animals Near You' : 'Find your future pet',
-          style: const TextStyle(color: Colors.black),
-        ),
-      ),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: child,
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -46,10 +23,32 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.green,
           ),
         ],
-        currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue,
-        onTap: _onItemTapped,
+        currentIndex: _calculateSelectedIndex(context),
+        onTap: (int idx) => _onItemTapped(idx, context),
       ),
     );
+  }
+
+  static int _calculateSelectedIndex(BuildContext context) {
+    final String location = GoRouterState.of(context).location;
+    if (location.startsWith('/animals')) {
+      return 0;
+    }
+    if (location.startsWith('/search')) {
+      return 1;
+    }
+    return 0;
+  }
+
+  void _onItemTapped(int index, BuildContext context) {
+    switch (index) {
+      case 0:
+        GoRouter.of(context).go('/animals');
+        break;
+      case 1:
+        GoRouter.of(context).go('/search');
+        break;
+    }
   }
 }

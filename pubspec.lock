@@ -706,6 +706,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
+  search:
+    dependency: "direct main"
+    description:
+      path: "packages/features/search"
+      relative: true
+    source: path
+    version: "0.0.0"
   shared_preferences:
     dependency: "direct main"
     description:

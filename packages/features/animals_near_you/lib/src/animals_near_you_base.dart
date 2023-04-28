@@ -31,61 +31,72 @@ class AnimalsNearYouPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, child) {
-        final locationPermissionValue = ref.watch(locationPermissionProvider);
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text(
+          'Animals Near You',
+          style: const TextStyle(color: Colors.black),
+        ),
+      ),
+      body: Consumer(
+        builder: (context, ref, child) {
+          final locationPermissionValue = ref.watch(locationPermissionProvider);
 
-        return locationPermissionValue.when(
-          data: (data) {
-            if (data == LocationPermission.denied ||
-                data == LocationPermission.deniedForever) {
-              return RequestLocationPermissionPage();
-            } else {
-              return FutureBuilder<Position>(
-                future: _determinePosition(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return AnimalsNearYouPageContents(position: snapshot.data);
-                  } else if (snapshot.hasError) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.error_outline,
-                          color: Colors.red,
-                          size: 60,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: Text('Error: ${snapshot.error}'),
-                        ),
-                      ],
-                    );
-                  } else {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: CircularProgressIndicator(),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 16),
-                          child: Text('Awaiting result...'),
-                        ),
-                      ],
-                    );
-                  }
-                },
-              );
-            }
-          },
-          error: (error, stackTrace) => Center(child: Text(error.toString())),
-          loading: () => const Center(child: CircularProgressIndicator()),
-        );
-      },
+          return locationPermissionValue.when(
+            data: (data) {
+              if (data == LocationPermission.denied ||
+                  data == LocationPermission.deniedForever) {
+                return RequestLocationPermissionPage();
+              } else {
+                return FutureBuilder<Position>(
+                  future: _determinePosition(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return AnimalsNearYouPageContents(
+                          position: snapshot.data);
+                    } else if (snapshot.hasError) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.error_outline,
+                            color: Colors.red,
+                            size: 60,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: Text('Error: ${snapshot.error}'),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 60,
+                            height: 60,
+                            child: CircularProgressIndicator(),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 16),
+                            child: Text('Awaiting result...'),
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                );
+              }
+            },
+            error: (error, stackTrace) => Center(child: Text(error.toString())),
+            loading: () => const Center(child: CircularProgressIndicator()),
+          );
+        },
+      ),
     );
   }
 }

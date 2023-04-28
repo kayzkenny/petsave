@@ -233,7 +233,7 @@ class _OnboardingPageScreenState extends ConsumerState<OnboardingPage> {
                   ),
                   onPressed: () async {
                     void callback() {
-                      context.go('/home');
+                      context.go('/animals');
                     }
 
                     setState(() {

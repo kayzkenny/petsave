@@ -11,6 +11,9 @@
 // }
 
 // create an enum from the example above
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 enum AnimalSearchType {
   none,
   cat,
@@ -21,4 +24,30 @@ enum AnimalSearchType {
   bird,
   scalesFinsAndOther,
   barnyard,
+}
+
+class SearchPage extends ConsumerStatefulWidget {
+  const SearchPage({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends ConsumerState<SearchPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text(
+          'Find your future pet',
+          style: const TextStyle(color: Colors.black),
+        ),
+      ),
+      body: Center(
+        child: Text('Search Page'),
+      ),
+    );
+  }
 }
