@@ -11,6 +11,7 @@ final sharedPreferencesServiceProvider = Provider<SharedPreferences>((ref) {
 extension LocalStorageService on SharedPreferences {
   static const String accessTokenKey = 'accessTokenKey';
   static const String expiresInKey = 'expiresIn';
+  static const String lastTokenTimestampKey = 'lastTokenTimestamp';
 
   Future<void> saveAccessToken(String accessToken) async {
     await setString(accessTokenKey, accessToken);
@@ -24,21 +25,25 @@ extension LocalStorageService on SharedPreferences {
     await setInt(expiresInKey, expiresIn);
   }
 
+  Future<void> saveLastTokenTimestamp(int expiresIn) async {
+    await setInt(lastTokenTimestampKey, expiresIn);
+  }
+
   int? getExpiresIn() {
     return getInt(expiresInKey);
   }
 
-  // return true if access token is expired
+// Return true if the access token is expired
+// compare the current time with the last token timestamp + the expires in value
   bool isAccessTokenExpired() {
-    final expiresIn = getExpiresIn();
-    if (expiresIn == null) {
+    final lastTokenTimestamp = getInt(lastTokenTimestampKey);
+    final expiresIn = getInt(expiresInKey);
+    if (lastTokenTimestamp == null || expiresIn == null) {
       return true;
     }
-    final accessToken = getAccessToken();
-    if (accessToken == null) {
-      return true;
-    }
-    return DateTime.now().millisecondsSinceEpoch > expiresIn;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final expiresAt = lastTokenTimestamp + (expiresIn * 1000);
+    return now > expiresAt;
   }
 }
 
@@ -70,6 +75,9 @@ class UserRepository {
     }
     await sharedPreferences.saveAccessToken(response.accessToken!);
     await sharedPreferences.saveExpiresIn(response.expiresIn!);
+    await sharedPreferences.saveLastTokenTimestamp(
+      DateTime.now().millisecondsSinceEpoch,
+    );
   }
 }
 

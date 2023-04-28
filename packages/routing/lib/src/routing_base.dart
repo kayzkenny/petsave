@@ -1,6 +1,40 @@
-import 'package:animals_near_you/animals_near_you.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:routing/src/app_router.dart';
+
+/// Simple not found screen used for 404 errors (page not found on web)
+class NotFoundScreen extends StatelessWidget {
+  /// Creates a new not found screen
+  const NotFoundScreen({super.key, this.error});
+  final Exception? error;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                error != null ? '404 - Page not found!' : error.toString(),
+                style: Theme.of(context).textTheme.headlineMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32.0),
+              ElevatedButton(
+                onPressed: () => context.goNamed(AppRoute.onboarding.name),
+                child: const Text('Go Home'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key, required this.child});
@@ -44,10 +78,10 @@ class HomePage extends StatelessWidget {
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
-        GoRouter.of(context).go('/animals');
+        AnimalsRouteData().go(context);
         break;
       case 1:
-        GoRouter.of(context).go('/search');
+        SearchRouteData().go(context);
         break;
     }
   }

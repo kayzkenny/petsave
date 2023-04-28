@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:routing/routing.dart';
 import 'package:user_repository/user_repository.dart';
 
 final List<String> imgList = [
@@ -233,7 +233,7 @@ class _OnboardingPageScreenState extends ConsumerState<OnboardingPage> {
                   ),
                   onPressed: () async {
                     void callback() {
-                      context.go('/animals');
+                      const AnimalsRouteData().go(context);
                     }
 
                     setState(() {

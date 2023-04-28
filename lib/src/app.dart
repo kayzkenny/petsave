@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:petsave/src/routing/app_router.dart';
+import 'package:routing/routing.dart';
 
 /// Root scaffold messenger key used for showing snackbars anywhere in the app
 final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =

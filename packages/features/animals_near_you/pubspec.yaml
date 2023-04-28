@@ -17,6 +17,8 @@ dependencies:
     path: ../../../packages/domain_models
   animal_repository:
     path: ../../../packages/animal_repository
+  routing:
+    path: ../../../packages/routing
 
 dev_dependencies:
   flutter_test:

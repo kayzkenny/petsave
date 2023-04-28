@@ -19,6 +19,8 @@ dependencies:
     path: packages/animal_repository
   user_repository:
     path: packages/user_repository
+  routing:
+    path: packages/routing
   onboarding:
     path: packages/features/onboarding
   animals_near_you:
