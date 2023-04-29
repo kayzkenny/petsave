@@ -96,6 +96,56 @@ class AnimalRepository {
     return animalTypesFromNetwork.types.map((e) => e.toDomainModel()).toList();
   }
 
+  Future<List<Animal>> getAnimals({
+    String? name,
+    String? location,
+    String? breed,
+    String? coat,
+    String? color,
+    String? gender,
+    String? age,
+    String? organization,
+    String? size,
+    String? sort,
+    String? status,
+    String? type,
+    bool? declawed,
+    bool? goodWithCats,
+    bool? goodWithChildren,
+    bool? goodWithDogs,
+    bool? houseTrained,
+    DateTime? after,
+    DateTime? before,
+    required int page,
+    required int limit,
+  }) async {
+    final results = await remoteApi.getAnimals(
+      page: page,
+      name: name,
+      limit: limit,
+      location: location,
+      breed: breed,
+      coat: coat,
+      declawed: declawed,
+      color: color,
+      gender: gender,
+      goodWithCats: goodWithCats,
+      goodWithChildren: goodWithChildren,
+      goodWithDogs: goodWithDogs,
+      age: age,
+      after: after?.toIso8601String(),
+      before: before?.toIso8601String(),
+      houseTrained: houseTrained,
+      organization: organization,
+      size: size,
+      sort: sort,
+      status: status,
+      type: type,
+    );
+
+    return results.animalList.map((e) => e.toDomainModel()).toList();
+  }
+
   // Future<List<Animal>> getAnimalListPaged({
   //   String? name,
   //   String? location,
