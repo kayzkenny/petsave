@@ -10,7 +10,6 @@ import 'package:routing/routing.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:search/src/animal_search_type.dart';
 import 'package:search/src/animal_type_card.dart';
-import 'package:search/src/search_query.dart';
 
 class SearchPage extends ConsumerStatefulWidget {
   const SearchPage({super.key});
@@ -22,7 +21,8 @@ class SearchPage extends ConsumerStatefulWidget {
 class _SearchPageState extends ConsumerState<SearchPage> {
   final _searchController = BehaviorSubject<String>();
   static const _pageSize = 20;
-  final SearchQuery _searchQuery = SearchQuery();
+  // TODO: Implement search query
+  // final SearchQuery _searchQuery = SearchQuery();
 
   final PagingController<int, Animal> _pagingController =
       PagingController(firstPageKey: 1);

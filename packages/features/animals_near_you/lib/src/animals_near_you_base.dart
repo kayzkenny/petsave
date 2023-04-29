@@ -139,6 +139,7 @@ class _AnimalsNearYouContentsPageState
   }
 
   Future<void> _fetchPage(int pageKey, {bool isRefreshing = false}) async {
+    // TODO: use future to fetch animal list
     final animalstream = await ref.watch(animalRepositoryProvider.future).then(
           (value) => value.getAnimalListStream(
             page: pageKey,
