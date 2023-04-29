@@ -63,11 +63,12 @@ class _SearchPageState extends ConsumerState<SearchPage> {
 
   final PagingController<int, Animal> _pagingController =
       PagingController(firstPageKey: 1);
-  // String? _searchTerm;
+  bool _showPlaceholder = true;
 
   @override
   void initState() {
     _searchController
+        .where((query) => query.isNotEmpty)
         .distinct() // Optional: Ensure that only distinct search queries are emitted
         .debounceTime(
             Duration(milliseconds: 500)) // Set your desired debounce duration
@@ -75,6 +76,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       // Perform the search operation
       // Call your search function or perform any desired action here
       // e.g., make an API request with the debounced query
+      setState(() {
+        _showPlaceholder = false;
+      });
       _pagingController.refresh();
     });
     _pagingController.addPageRequestListener((pageKey) {
@@ -95,6 +99,11 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       final query = _searchController.valueOrNull ?? '';
       if (query.isEmpty) {
         // Show placeholder widget or handle empty query case
+        // Handle empty query case
+        setState(() {
+          _showPlaceholder = true;
+        });
+        _pagingController.refresh();
         return;
       }
 
@@ -147,6 +156,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                     ),
                   ),
                   onChanged: (String query) {
+                    setState(() {
+                      _showPlaceholder = query.isEmpty;
+                    });
                     _searchController.add(query);
                   },
                 ),
@@ -161,19 +173,27 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                 ),
               ],
             ),
-            PagedSliverList<int, Animal>.separated(
-              pagingController: _pagingController,
-              separatorBuilder: (context, index) => const Divider(indent: 136),
-              builderDelegate: PagedChildBuilderDelegate<Animal>(
-                animateTransitions: true,
-                itemBuilder: (context, animal, index) {
-                  return GestureDetector(
-                    onTap: () => AnimalDetailsRouteData(animal.id!).go(context),
-                    child: AnimalRow(animal: animal),
-                  );
-                },
-              ),
-            ),
+            _showPlaceholder
+                ? SliverFillRemaining(
+                    child: Center(
+                      child: Text('Search for something...'),
+                    ),
+                  )
+                : PagedSliverList<int, Animal>.separated(
+                    pagingController: _pagingController,
+                    separatorBuilder: (context, index) =>
+                        const Divider(indent: 136),
+                    builderDelegate: PagedChildBuilderDelegate<Animal>(
+                      animateTransitions: true,
+                      itemBuilder: (context, animal, index) {
+                        return GestureDetector(
+                          onTap: () =>
+                              AnimalDetailsRouteData(animal.id!).go(context),
+                          child: AnimalRow(animal: animal),
+                        );
+                      },
+                    ),
+                  ),
             // PagedSliverList.separated(
             //   separatorBuilder: (context, index) => const Divider(indent: 136),
             //   pagingController: _pagingController,
