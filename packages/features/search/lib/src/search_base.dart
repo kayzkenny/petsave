@@ -56,7 +56,7 @@ class SearchPage extends ConsumerStatefulWidget {
 class _SearchPageState extends ConsumerState<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   static const _pageSize = 20;
-  SearchQuery _searchQuery = SearchQuery();
+  final SearchQuery _searchQuery = SearchQuery();
 
   // is search query empty
   // return true if all search query fields are null
@@ -121,6 +121,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
 
   final PagingController<int, Animal> _pagingController =
       PagingController(firstPageKey: 1);
+  String? _searchTerm;
 
   @override
   void initState() {
@@ -138,16 +139,12 @@ class _SearchPageState extends ConsumerState<SearchPage> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      List<Animal> newItems = <Animal>[];
-      if (isSearchQueryEmpty()) {
-        final animalRepository =
-            await ref.read(animalRepositoryProvider.future);
-        newItems = await animalRepository.getAnimals(
-          limit: _pageSize,
-          page: 1,
-          name: _searchQuery.name,
-        );
-      }
+      final animalRepository = await ref.read(animalRepositoryProvider.future);
+      final newItems = await animalRepository.getAnimals(
+        limit: _pageSize,
+        page: 1,
+        name: _searchTerm,
+      );
 
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
@@ -161,95 +158,106 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     }
   }
 
-  Future<void> _refresh() async {
-    // Reset the paging controller to the first page.
+  void _updateSearchTerm(String searchTerm) {
+    _searchTerm = searchTerm;
     _pagingController.refresh();
-    // Fetch the first page of data again.
-    await _fetchPage(_pagingController.firstPageKey);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          'Find your future pet',
-          style: const TextStyle(color: Colors.black),
-        ),
-        toolbarHeight: 80,
-        bottom: PreferredSize(
-          preferredSize: Size.zero,
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Search',
-              hintStyle: TextStyle(color: Colors.grey),
-              border: InputBorder.none,
-              fillColor: Colors.grey,
-              prefixIcon: const Icon(
-                Icons.search,
-                color: Colors.blue,
-              ),
-            ),
-            controller: _searchController,
-            onChanged: (value) {
-              setState(() {
-                _searchQuery = _searchQuery.copyWith(name: value);
-              });
-              _refresh();
-            },
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.filter_list,
-              color: Colors.blue,
-            ),
-            onPressed: () {},
-          ),
-        ],
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: PagedListView<int, Animal>.separated(
-          pagingController: _pagingController,
-          separatorBuilder: (context, index) => const Divider(indent: 136),
-          builderDelegate: PagedChildBuilderDelegate<Animal>(
-            noItemsFoundIndicatorBuilder: (context) {
-              return GridView.count(
-                crossAxisCount: 2,
-                childAspectRatio: 1.5,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                children: AnimalSearchType.values
-                    .map(
-                      (animalType) => AnimalTypeCard(
-                        label: animalType.label,
-                        imagePath: 'assets/images/${animalType.value}.jpg',
-                        onTap: () {
-                          _searchQuery = _searchQuery.copyWith(
-                            name: animalType.value,
-                          );
-                          _searchController.text = animalType.value!;
-                        },
-                      ),
-                    )
-                    .where(
-                      (element) => element.label != AnimalSearchType.none.label,
-                    )
-                    .toList(),
-              );
-            },
-            itemBuilder: (context, animal, index) {
-              return GestureDetector(
-                onTap: () => AnimalDetailsRouteData(animal.id!).go(context),
-                child: AnimalRow(animal: animal),
-              );
-            },
-          ),
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              title: Text(
+                'Find your future pet',
+                style: const TextStyle(color: Colors.black),
+              ),
+              toolbarHeight: 80,
+              bottom: PreferredSize(
+                preferredSize: Size.zero,
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    border: InputBorder.none,
+                    fillColor: Colors.grey,
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  controller: _searchController,
+                  onChanged: (searchTerm) => _updateSearchTerm(searchTerm),
+                ),
+              ),
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.filter_list,
+                    color: Colors.blue,
+                  ),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+            PagedSliverList<int, Animal>.separated(
+              pagingController: _pagingController,
+              separatorBuilder: (context, index) => const Divider(indent: 136),
+              builderDelegate: PagedChildBuilderDelegate<Animal>(
+                animateTransitions: true,
+                itemBuilder: (context, animal, index) {
+                  return GestureDetector(
+                    onTap: () => AnimalDetailsRouteData(animal.id!).go(context),
+                    child: AnimalRow(animal: animal),
+                  );
+                },
+              ),
+            ),
+            // PagedSliverList.separated(
+            //   separatorBuilder: (context, index) => const Divider(indent: 136),
+            //   pagingController: _pagingController,
+            //   builderDelegate: PagedChildBuilderDelegate<Animal>(
+            //     noItemsFoundIndicatorBuilder: (context) {
+            //       return GridView.count(
+            //         crossAxisCount: 2,
+            //         childAspectRatio: 1.5,
+            //         crossAxisSpacing: 12,
+            //         mainAxisSpacing: 12,
+            //         children: AnimalSearchType.values
+            //             .map(
+            //               (animalType) => AnimalTypeCard(
+            //                 label: animalType.label,
+            //                 imagePath: 'assets/images/${animalType.value}.jpg',
+            //                 onTap: () {
+            //                   _searchQuery = _searchQuery.copyWith(
+            //                     name: animalType.value,
+            //                   );
+            //                   _searchController.text = animalType.value!;
+            //                 },
+            //               ),
+            //             )
+            //             .where(
+            //               (element) =>
+            //                   element.label != AnimalSearchType.none.label,
+            //             )
+            //             .toList(),
+            //       );
+            //     },
+            //     itemBuilder: (context, animal, index) {
+            //       return GestureDetector(
+            //         onTap: () => AnimalDetailsRouteData(animal.id!).go(context),
+            //         child: AnimalRow(animal: animal),
+            //       );
+            //     },
+            //   ),
+            // ),
+          ],
         ),
       ),
     );
