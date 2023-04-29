@@ -230,44 +230,6 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         },
                       ),
                     ),
-              // PagedSliverList.separated(
-              //   separatorBuilder: (context, index) => const Divider(indent: 136),
-              //   pagingController: _pagingController,
-              //   builderDelegate: PagedChildBuilderDelegate<Animal>(
-              //     noItemsFoundIndicatorBuilder: (context) {
-              //       return GridView.count(
-              //         crossAxisCount: 2,
-              //         childAspectRatio: 1.5,
-              //         crossAxisSpacing: 12,
-              //         mainAxisSpacing: 12,
-              //         children: AnimalSearchType.values
-              //             .map(
-              //               (animalType) => AnimalTypeCard(
-              //                 label: animalType.label,
-              //                 imagePath: 'assets/images/${animalType.value}.jpg',
-              //                 onTap: () {
-              //                   _searchQuery = _searchQuery.copyWith(
-              //                     name: animalType.value,
-              //                   );
-              //                   _searchController.text = animalType.value!;
-              //                 },
-              //               ),
-              //             )
-              //             .where(
-              //               (element) =>
-              //                   element.label != AnimalSearchType.none.label,
-              //             )
-              //             .toList(),
-              //       );
-              //     },
-              //     itemBuilder: (context, animal, index) {
-              //       return GestureDetector(
-              //         onTap: () => AnimalDetailsRouteData(animal.id!).go(context),
-              //         child: AnimalRow(animal: animal),
-              //       );
-              //     },
-              //   ),
-              // ),
             ],
           ),
         ),
