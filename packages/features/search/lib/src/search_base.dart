@@ -130,109 +130,146 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              title: Text(
-                'Find your future pet',
-                style: const TextStyle(color: Colors.black),
-              ),
-              toolbarHeight: 80,
-              bottom: PreferredSize(
-                preferredSize: Size.zero,
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    border: InputBorder.none,
-                    fillColor: Colors.grey,
-                    prefixIcon: const Icon(
-                      Icons.search,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                title: Text(
+                  'Find your future pet',
+                  style: const TextStyle(color: Colors.black),
+                ),
+                toolbarHeight: 80,
+                bottom: PreferredSize(
+                  preferredSize: Size.zero,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      hintStyle: TextStyle(color: Colors.grey),
+                      border: InputBorder.none,
+                      fillColor: Colors.grey,
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    onChanged: (String query) {
+                      setState(() {
+                        _showPlaceholder = query.isEmpty;
+                      });
+                      _searchController.add(query);
+                    },
+                  ),
+                ),
+                actions: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.filter_list,
                       color: Colors.blue,
                     ),
+                    onPressed: () {},
                   ),
-                  onChanged: (String query) {
-                    setState(() {
-                      _showPlaceholder = query.isEmpty;
-                    });
-                    _searchController.add(query);
-                  },
-                ),
+                ],
               ),
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.filter_list,
-                    color: Colors.blue,
-                  ),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            _showPlaceholder
-                ? SliverFillRemaining(
-                    child: Center(
-                      child: Text('Search for something...'),
+              _showPlaceholder
+                  ? SliverFillRemaining(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Browse by Type',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.start,
+                          ),
+                          const SizedBox(height: 16),
+                          Expanded(
+                            child: GridView.count(
+                              crossAxisCount: 2,
+                              childAspectRatio: 1.5,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                              children: AnimalSearchType.values
+                                  .map(
+                                    (animalType) => AnimalTypeCard(
+                                      label: animalType.label,
+                                      imagePath:
+                                          'assets/images/${animalType.value}.jpg',
+                                      onTap: () {
+                                        _searchController
+                                            .add(animalType.value!);
+                                      },
+                                    ),
+                                  )
+                                  .where((element) =>
+                                      element.label !=
+                                      AnimalSearchType.none.label)
+                                  .toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : PagedSliverList<int, Animal>.separated(
+                      pagingController: _pagingController,
+                      separatorBuilder: (context, index) =>
+                          const Divider(indent: 136),
+                      builderDelegate: PagedChildBuilderDelegate<Animal>(
+                        animateTransitions: true,
+                        itemBuilder: (context, animal, index) {
+                          return GestureDetector(
+                            onTap: () =>
+                                AnimalDetailsRouteData(animal.id!).go(context),
+                            child: AnimalRow(animal: animal),
+                          );
+                        },
+                      ),
                     ),
-                  )
-                : PagedSliverList<int, Animal>.separated(
-                    pagingController: _pagingController,
-                    separatorBuilder: (context, index) =>
-                        const Divider(indent: 136),
-                    builderDelegate: PagedChildBuilderDelegate<Animal>(
-                      animateTransitions: true,
-                      itemBuilder: (context, animal, index) {
-                        return GestureDetector(
-                          onTap: () =>
-                              AnimalDetailsRouteData(animal.id!).go(context),
-                          child: AnimalRow(animal: animal),
-                        );
-                      },
-                    ),
-                  ),
-            // PagedSliverList.separated(
-            //   separatorBuilder: (context, index) => const Divider(indent: 136),
-            //   pagingController: _pagingController,
-            //   builderDelegate: PagedChildBuilderDelegate<Animal>(
-            //     noItemsFoundIndicatorBuilder: (context) {
-            //       return GridView.count(
-            //         crossAxisCount: 2,
-            //         childAspectRatio: 1.5,
-            //         crossAxisSpacing: 12,
-            //         mainAxisSpacing: 12,
-            //         children: AnimalSearchType.values
-            //             .map(
-            //               (animalType) => AnimalTypeCard(
-            //                 label: animalType.label,
-            //                 imagePath: 'assets/images/${animalType.value}.jpg',
-            //                 onTap: () {
-            //                   _searchQuery = _searchQuery.copyWith(
-            //                     name: animalType.value,
-            //                   );
-            //                   _searchController.text = animalType.value!;
-            //                 },
-            //               ),
-            //             )
-            //             .where(
-            //               (element) =>
-            //                   element.label != AnimalSearchType.none.label,
-            //             )
-            //             .toList(),
-            //       );
-            //     },
-            //     itemBuilder: (context, animal, index) {
-            //       return GestureDetector(
-            //         onTap: () => AnimalDetailsRouteData(animal.id!).go(context),
-            //         child: AnimalRow(animal: animal),
-            //       );
-            //     },
-            //   ),
-            // ),
-          ],
+              // PagedSliverList.separated(
+              //   separatorBuilder: (context, index) => const Divider(indent: 136),
+              //   pagingController: _pagingController,
+              //   builderDelegate: PagedChildBuilderDelegate<Animal>(
+              //     noItemsFoundIndicatorBuilder: (context) {
+              //       return GridView.count(
+              //         crossAxisCount: 2,
+              //         childAspectRatio: 1.5,
+              //         crossAxisSpacing: 12,
+              //         mainAxisSpacing: 12,
+              //         children: AnimalSearchType.values
+              //             .map(
+              //               (animalType) => AnimalTypeCard(
+              //                 label: animalType.label,
+              //                 imagePath: 'assets/images/${animalType.value}.jpg',
+              //                 onTap: () {
+              //                   _searchQuery = _searchQuery.copyWith(
+              //                     name: animalType.value,
+              //                   );
+              //                   _searchController.text = animalType.value!;
+              //                 },
+              //               ),
+              //             )
+              //             .where(
+              //               (element) =>
+              //                   element.label != AnimalSearchType.none.label,
+              //             )
+              //             .toList(),
+              //       );
+              //     },
+              //     itemBuilder: (context, animal, index) {
+              //       return GestureDetector(
+              //         onTap: () => AnimalDetailsRouteData(animal.id!).go(context),
+              //         child: AnimalRow(animal: animal),
+              //       );
+              //     },
+              //   ),
+              // ),
+            ],
+          ),
         ),
       ),
     );
