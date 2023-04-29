@@ -16,7 +16,6 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$SearchQuery {
-  String? get name => throw _privateConstructorUsedError;
   String? get breed => throw _privateConstructorUsedError;
   String? get coat => throw _privateConstructorUsedError;
   String? get color => throw _privateConstructorUsedError;
@@ -47,8 +46,7 @@ abstract class $SearchQueryCopyWith<$Res> {
       _$SearchQueryCopyWithImpl<$Res, SearchQuery>;
   @useResult
   $Res call(
-      {String? name,
-      String? breed,
+      {String? breed,
       String? coat,
       String? color,
       String? gender,
@@ -80,7 +78,6 @@ class _$SearchQueryCopyWithImpl<$Res, $Val extends SearchQuery>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = freezed,
     Object? breed = freezed,
     Object? coat = freezed,
     Object? color = freezed,
@@ -100,10 +97,6 @@ class _$SearchQueryCopyWithImpl<$Res, $Val extends SearchQuery>
     Object? before = freezed,
   }) {
     return _then(_value.copyWith(
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
       breed: freezed == breed
           ? _value.breed
           : breed // ignore: cast_nullable_to_non_nullable
@@ -185,8 +178,7 @@ abstract class _$$_SearchQueryCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? name,
-      String? breed,
+      {String? breed,
       String? coat,
       String? color,
       String? gender,
@@ -216,7 +208,6 @@ class __$$_SearchQueryCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = freezed,
     Object? breed = freezed,
     Object? coat = freezed,
     Object? color = freezed,
@@ -236,10 +227,6 @@ class __$$_SearchQueryCopyWithImpl<$Res>
     Object? before = freezed,
   }) {
     return _then(_$_SearchQuery(
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
       breed: freezed == breed
           ? _value.breed
           : breed // ignore: cast_nullable_to_non_nullable
@@ -316,8 +303,7 @@ class __$$_SearchQueryCopyWithImpl<$Res>
 
 class _$_SearchQuery implements _SearchQuery {
   const _$_SearchQuery(
-      {this.name,
-      this.breed,
+      {this.breed,
       this.coat,
       this.color,
       this.gender,
@@ -335,8 +321,6 @@ class _$_SearchQuery implements _SearchQuery {
       this.after,
       this.before});
 
-  @override
-  final String? name;
   @override
   final String? breed;
   @override
@@ -374,7 +358,7 @@ class _$_SearchQuery implements _SearchQuery {
 
   @override
   String toString() {
-    return 'SearchQuery(name: $name, breed: $breed, coat: $coat, color: $color, gender: $gender, age: $age, organization: $organization, size: $size, sort: $sort, status: $status, type: $type, declawed: $declawed, goodWithCats: $goodWithCats, goodWithChildren: $goodWithChildren, goodWithDogs: $goodWithDogs, houseTrained: $houseTrained, after: $after, before: $before)';
+    return 'SearchQuery(breed: $breed, coat: $coat, color: $color, gender: $gender, age: $age, organization: $organization, size: $size, sort: $sort, status: $status, type: $type, declawed: $declawed, goodWithCats: $goodWithCats, goodWithChildren: $goodWithChildren, goodWithDogs: $goodWithDogs, houseTrained: $houseTrained, after: $after, before: $before)';
   }
 
   @override
@@ -382,7 +366,6 @@ class _$_SearchQuery implements _SearchQuery {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SearchQuery &&
-            (identical(other.name, name) || other.name == name) &&
             (identical(other.breed, breed) || other.breed == breed) &&
             (identical(other.coat, coat) || other.coat == coat) &&
             (identical(other.color, color) || other.color == color) &&
@@ -411,7 +394,6 @@ class _$_SearchQuery implements _SearchQuery {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      name,
       breed,
       coat,
       color,
@@ -439,8 +421,7 @@ class _$_SearchQuery implements _SearchQuery {
 
 abstract class _SearchQuery implements SearchQuery {
   const factory _SearchQuery(
-      {final String? name,
-      final String? breed,
+      {final String? breed,
       final String? coat,
       final String? color,
       final String? gender,
@@ -458,8 +439,6 @@ abstract class _SearchQuery implements SearchQuery {
       final DateTime? after,
       final DateTime? before}) = _$_SearchQuery;
 
-  @override
-  String? get name;
   @override
   String? get breed;
   @override

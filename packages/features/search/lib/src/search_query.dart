@@ -5,7 +5,6 @@ part 'search_query.freezed.dart';
 @freezed
 class SearchQuery with _$SearchQuery {
   const factory SearchQuery({
-    String? name,
     String? breed,
     String? coat,
     String? color,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animal_repository/animal_repository.dart';
 import 'package:animals_near_you/animals_near_you.dart';
 import 'package:domain_models/domain_models.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:routing/routing.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:search/src/search_query.dart';
 
 enum AnimalSearchType {
@@ -54,77 +57,26 @@ class SearchPage extends ConsumerStatefulWidget {
 }
 
 class _SearchPageState extends ConsumerState<SearchPage> {
-  final TextEditingController _searchController = TextEditingController();
+  final _searchController = BehaviorSubject<String>();
   static const _pageSize = 20;
   final SearchQuery _searchQuery = SearchQuery();
 
-  // is search query empty
-  // return true if all search query fields are null
-  bool isSearchQueryEmpty() {
-    if (_searchQuery.after != null) {
-      return false;
-    }
-    if (_searchQuery.age != null) {
-      return false;
-    }
-    if (_searchQuery.before != null) {
-      return false;
-    }
-    if (_searchQuery.breed != null) {
-      return false;
-    }
-    if (_searchQuery.coat != null) {
-      return false;
-    }
-    if (_searchQuery.color != null) {
-      return false;
-    }
-    if (_searchQuery.declawed != null) {
-      return false;
-    }
-    if (_searchQuery.name != null) {
-      return false;
-    }
-    if (_searchQuery.organization != null) {
-      return false;
-    }
-    if (_searchQuery.size != null) {
-      return false;
-    }
-    if (_searchQuery.sort != null) {
-      return false;
-    }
-    if (_searchQuery.status != null) {
-      return false;
-    }
-    if (_searchQuery.type != null) {
-      return false;
-    }
-    if (_searchQuery.goodWithCats != null) {
-      return false;
-    }
-    if (_searchQuery.goodWithChildren != null) {
-      return false;
-    }
-    if (_searchQuery.goodWithDogs != null) {
-      return false;
-    }
-    if (_searchQuery.houseTrained != null) {
-      return false;
-    }
-    if (_searchQuery.gender != null) {
-      return false;
-    }
-
-    return true;
-  }
-
   final PagingController<int, Animal> _pagingController =
       PagingController(firstPageKey: 1);
-  String? _searchTerm;
+  // String? _searchTerm;
 
   @override
   void initState() {
+    _searchController
+        .distinct() // Optional: Ensure that only distinct search queries are emitted
+        .debounceTime(
+            Duration(milliseconds: 500)) // Set your desired debounce duration
+        .listen((String query) {
+      // Perform the search operation
+      // Call your search function or perform any desired action here
+      // e.g., make an API request with the debounced query
+      _pagingController.refresh();
+    });
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
@@ -133,17 +85,24 @@ class _SearchPageState extends ConsumerState<SearchPage> {
 
   @override
   void dispose() {
+    _searchController.close();
     _pagingController.dispose();
     super.dispose();
   }
 
   Future<void> _fetchPage(int pageKey) async {
     try {
+      final query = _searchController.valueOrNull ?? '';
+      if (query.isEmpty) {
+        // Show placeholder widget or handle empty query case
+        return;
+      }
+
       final animalRepository = await ref.read(animalRepositoryProvider.future);
       final newItems = await animalRepository.getAnimals(
+        name: query,
         limit: _pageSize,
         page: 1,
-        name: _searchTerm,
       );
 
       final isLastPage = newItems.length < _pageSize;
@@ -156,11 +115,6 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     } catch (error) {
       _pagingController.error = error;
     }
-  }
-
-  void _updateSearchTerm(String searchTerm) {
-    _searchTerm = searchTerm;
-    _pagingController.refresh();
   }
 
   @override
@@ -192,8 +146,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                       color: Colors.blue,
                     ),
                   ),
-                  controller: _searchController,
-                  onChanged: (searchTerm) => _updateSearchTerm(searchTerm),
+                  onChanged: (String query) {
+                    _searchController.add(query);
+                  },
                 ),
               ),
               actions: [
