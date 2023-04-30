@@ -32,20 +32,34 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   void initState() {
     _searchController
         .where((query) => query.isNotEmpty)
-        .distinct() // Optional: Ensure that only distinct search queries are emitted
-        .debounceTime(
-            Duration(milliseconds: 500)) // Set your desired debounce duration
+        // Optional: Ensure that only distinct search queries are emitted
+        .distinct()
+        .debounceTime(Duration(milliseconds: 500))
         .listen((String query) {
-      // Perform the search operation
-      // Call your search function or perform any desired action here
-      // e.g., make an API request with the debounced query
       setState(() {
         _showPlaceholder = false;
       });
       _pagingController.refresh();
     });
+
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
+    });
+
+    _pagingController.addStatusListener((status) {
+      if (status == PagingStatus.subsequentPageError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text(
+              'Something went wrong while fetching a new page.',
+            ),
+            action: SnackBarAction(
+              label: 'Retry',
+              onPressed: () => _pagingController.retryLastFailedRequest(),
+            ),
+          ),
+        );
+      }
     });
     super.initState();
   }
@@ -74,7 +88,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       final newItems = await animalRepository.getAnimals(
         name: query,
         limit: _pageSize,
-        page: 1,
+        page: pageKey,
       );
 
       final isLastPage = newItems.length < _pageSize;

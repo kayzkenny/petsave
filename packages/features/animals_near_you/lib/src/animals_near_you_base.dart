@@ -131,60 +131,43 @@ class _AnimalsNearYouContentsPageState
   }
 
   @override
-  void didUpdateWidget(AnimalsNearYouPageContents oldWidget) {
-    if (oldWidget.position != widget.position) {
-      _pagingController.refresh();
-    }
-    super.didUpdateWidget(oldWidget);
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
   }
 
-  Future<void> _fetchPage(int pageKey, {bool isRefreshing = false}) async {
-    // TODO: use future to fetch animal list
-    final animalstream = await ref.watch(animalRepositoryProvider.future).then(
-          (value) => value.getAnimalListStream(
-            page: pageKey,
-            limit: _pageSize,
-            fetchPolicy: isRefreshing
-                ? AnimalFetchPolicy.networkOnly
-                : AnimalFetchPolicy.cacheAndNetwork,
-            location: widget.position == null
-                ? null
-                : '${widget.position?.latitude},${widget.position?.longitude}',
-          ),
-        );
-    animalstream.listen((newItems) {
+  Future<List<Animal>> fetchCachedAnimals() async {
+    final animalRepository = await ref.watch(animalRepositoryProvider.future);
+    return animalRepository.getAnimalsFromCache();
+  }
+
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      final animalRepository = await ref.watch(animalRepositoryProvider.future);
+      final newItems = await animalRepository.getAnimalsFromNetwork(
+        location: '${widget.position?.latitude},${widget.position?.longitude}',
+        page: pageKey,
+        limit: _pageSize,
+      );
+
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Reached the end of the list')),
-        );
       } else {
-        if (pageKey == 1 &&
-            _pagingController.itemList != null &&
-            _pagingController.itemList!.isNotEmpty) {
-          // We were previewing the list from the cache, so we need to clear it
-          _pagingController.itemList?.clear();
-        }
         final nextPageKey = pageKey + newItems.length;
         _pagingController.appendPage(newItems, nextPageKey);
       }
-    }, onError: (error) {
+    } catch (error) {
       _pagingController.error = error;
-    });
-  }
-
-  Future<void> _refresh() async {
-    // Reset the paging controller to the first page.
-    _pagingController.refresh();
-    // Fetch the first page of data again.
-    await _fetchPage(_pagingController.firstPageKey, isRefreshing: true);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: _refresh,
+      onRefresh: () => Future.sync(
+        () => _pagingController.refresh(),
+      ),
       child: PagedListView<int, Animal>.separated(
         pagingController: _pagingController,
         separatorBuilder: (context, index) => const Divider(indent: 136),
@@ -195,14 +178,33 @@ class _AnimalsNearYouContentsPageState
               child: AnimalRow(animal: animal),
             );
           },
+          // firstPageErrorIndicatorBuilder: (context) {
+          //   // show results from cache
+          //   return FutureBuilder<List<Animal>>(
+          //     future: fetchCachedAnimals(),
+          //     builder: (context, snapshot) {
+          //       if (snapshot.hasData) {
+          //         return ListView.builder(
+          //           itemCount: snapshot.data?.length,
+          //           itemBuilder: (context, index) {
+          //             return GestureDetector(
+          //               onTap: () => AnimalDetailsRouteData(
+          //                 snapshot.data![index].id!,
+          //               ).go(context),
+          //               child: AnimalRow(animal: snapshot.data![index]),
+          //             );
+          //           },
+          //         );
+          //       } else if (snapshot.hasError) {
+          //         return Center(child: Text(snapshot.error.toString()));
+          //       } else {
+          //         return Center(child: CircularProgressIndicator());
+          //       }
+          //     },
+          //   );
+          // },
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
   }
 }
