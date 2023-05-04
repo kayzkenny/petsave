@@ -40,6 +40,7 @@ abstract class PetFinderApi {
     @Query('good_with_dogs') bool? goodWithDogs,
     @Query('good_with_cats') bool? goodWithCats,
     @Query('house_trained') bool? houseTrained,
+    @Query('special_needs') bool? specialNeeds,
     @Query('declawed') bool? declawed,
     @Query('location') String? location,
     @Query('distance') int? distance,

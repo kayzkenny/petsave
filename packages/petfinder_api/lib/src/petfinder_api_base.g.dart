@@ -20,9 +20,9 @@ class _PetFinderApi implements PetFinderApi {
 
   @override
   Future<AuthResponseRM> getAuthToken({
-    required grantType,
-    required clientId,
-    required clientSecret,
+    required String grantType,
+    required String clientId,
+    required String clientSecret,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -52,28 +52,29 @@ class _PetFinderApi implements PetFinderApi {
 
   @override
   Future<AnimalListPageRM> getAnimals({
-    type,
-    breed,
-    size,
-    gender,
-    age,
-    color,
-    coat,
-    status,
-    name,
-    organization,
-    goodWithChildren,
-    goodWithDogs,
-    goodWithCats,
-    houseTrained,
-    declawed,
-    location,
-    distance,
-    before,
-    after,
-    sort,
-    page,
-    limit,
+    String? type,
+    String? breed,
+    String? size,
+    String? gender,
+    String? age,
+    String? color,
+    String? coat,
+    String? status,
+    String? name,
+    String? organization,
+    bool? goodWithChildren,
+    bool? goodWithDogs,
+    bool? goodWithCats,
+    bool? houseTrained,
+    bool? specialNeeds,
+    bool? declawed,
+    String? location,
+    int? distance,
+    String? before,
+    String? after,
+    String? sort,
+    int? page,
+    int? limit,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -91,6 +92,7 @@ class _PetFinderApi implements PetFinderApi {
       r'good_with_dogs': goodWithDogs,
       r'good_with_cats': goodWithCats,
       r'house_trained': houseTrained,
+      r'special_needs': specialNeeds,
       r'declawed': declawed,
       r'location': location,
       r'distance': distance,
@@ -121,7 +123,7 @@ class _PetFinderApi implements PetFinderApi {
   }
 
   @override
-  Future<AnimalDataRM> getAnimalById({required id}) async {
+  Future<AnimalDataRM> getAnimalById({required String id}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -145,15 +147,15 @@ class _PetFinderApi implements PetFinderApi {
 
   @override
   Future<OrganizationListPageRM> getOrganizations({
-    name,
-    location,
-    distance,
-    state,
-    country,
-    query,
-    sort,
-    limit,
-    page,
+    String? name,
+    String? location,
+    int? distance,
+    String? state,
+    String? country,
+    String? query,
+    String? sort,
+    int? limit,
+    int? page,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -188,7 +190,7 @@ class _PetFinderApi implements PetFinderApi {
   }
 
   @override
-  Future<OrganizationDataRM> getOrganizationById({required id}) async {
+  Future<OrganizationDataRM> getOrganizationById({required String id}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -234,7 +236,7 @@ class _PetFinderApi implements PetFinderApi {
   }
 
   @override
-  Future<AnimalDataRM> getSingleAnimalType({required type}) async {
+  Future<AnimalDataRM> getSingleAnimalType({required String type}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
