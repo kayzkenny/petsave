@@ -1,6 +1,6 @@
 PACKAGES := $(wildcard packages/*)
 FEATURES := $(wildcard packages/features/*)
-BUILD-RUNNER := packages/petfinder_api packages/local_storage packages/domain_models
+BUILD-RUNNER := packages/petfinder_api packages/local_storage packages/domain_models packages/animal_repository
 
 print:
 	for feature in $(FEATURES); do \
@@ -104,6 +104,6 @@ build-runner:
 	for package in $(BUILD-RUNNER); do \
 		cd $${package} ; \
 		echo "Running build-runner on $${package}" ; \
-		flutter pub run build_runner build --delete-conflicting-outputs ; \
+		dart run build_runner build --delete-conflicting-outputs ; \
 		cd ../../ ; \
 	done

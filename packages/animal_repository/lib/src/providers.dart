@@ -18,19 +18,16 @@ part 'providers.g.dart';
 // });
 
 @riverpod
-Future<AnimalRepository> animalRepository(AnimalRepositoryRef ref) async {
+AnimalRepository animalRepository(AnimalRepositoryRef ref) {
   final api = ref.watch(apiPod);
-  final localStorage = await ref.watch(localStoragePod.future);
+  final localStorage = ref.watch(localStoragePod);
 
-  return AnimalRepository(
-    remoteApi: api,
-    localStorage: localStorage,
-  );
+  return AnimalRepository(remoteApi: api, localStorage: localStorage);
 }
 
 @riverpod
 Future<Animal> animal(AnimalRef ref, int id) async {
-  final animalRepository = await ref.watch(animalRepositoryProvider.future);
+  final animalRepository = ref.watch(animalRepositoryProvider);
   return animalRepository.getAnimalById(id);
 }
 
@@ -43,7 +40,7 @@ Stream<List<Animal>> animalsStream(
   required int limit,
   required AnimalFetchPolicy fetchPolicy,
 }) async* {
-  final animalRepository = await ref.watch(animalRepositoryProvider.future);
+  final animalRepository = ref.watch(animalRepositoryProvider);
   yield* animalRepository.getAnimalListStream(
     name: name,
     location: location,
@@ -55,6 +52,6 @@ Stream<List<Animal>> animalsStream(
 
 @riverpod
 Future<List<AnimalTypes>> animalTypes(AnimalTypesRef ref) async {
-  final animalRepository = await ref.watch(animalRepositoryProvider.future);
+  final animalRepository = ref.watch(animalRepositoryProvider);
   return animalRepository.getAnimalTypes();
 }

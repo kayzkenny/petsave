@@ -1,5 +1,4 @@
-import 'package:animals_near_you/src/animal_row.dart';
-import 'package:animals_near_you/src/request_location_permission_page.dart';
+import 'package:animals_near_you/animals_near_you.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
@@ -137,13 +136,34 @@ class _AnimalsNearYouContentsPageState
   }
 
   Future<List<Animal>> fetchCachedAnimals() async {
-    final animalRepository = await ref.watch(animalRepositoryProvider.future);
+    final animalRepository = ref.watch(animalRepositoryProvider);
     return animalRepository.getAnimalsFromCache();
   }
 
-  Future<void> _fetchPage(int pageKey) async {
+  // Future<void> _fetchPage(int pageKey) async {
+  //   try {
+  //     final animalRepository = await ref.watch(animalRepositoryProvider.future);
+  //     final newItems = await animalRepository.getAnimalsFromNetwork(
+  //       location: '${widget.position?.latitude},${widget.position?.longitude}',
+  //       page: pageKey,
+  //       limit: _pageSize,
+  //     );
+
+  //     final isLastPage = newItems.length < _pageSize;
+  //     if (isLastPage) {
+  //       _pagingController.appendLastPage(newItems);
+  //     } else {
+  //       final nextPageKey = pageKey + newItems.length;
+  //       _pagingController.appendPage(newItems, nextPageKey);
+  //     }
+  //   } catch (error) {
+  //     _pagingController.error = error;
+  //   }
+  // }
+
+  Future<void> _fetchPage(int pageKey, {bool isRefreshing = false}) async {
     try {
-      final animalRepository = await ref.watch(animalRepositoryProvider.future);
+      final animalRepository = ref.watch(animalRepositoryProvider);
       final newItems = await animalRepository.getAnimalsFromNetwork(
         location: '${widget.position?.latitude},${widget.position?.longitude}',
         page: pageKey,
@@ -157,17 +177,25 @@ class _AnimalsNearYouContentsPageState
         final nextPageKey = pageKey + newItems.length;
         _pagingController.appendPage(newItems, nextPageKey);
       }
+      if (isRefreshing) {
+        _pagingController.refresh();
+      }
     } catch (error) {
       _pagingController.error = error;
     }
   }
 
+  Future<void> _refresh() async {
+    // Reset the paging controller to the first page.
+    _pagingController.refresh();
+    // Fetch the first page of data again.
+    await _fetchPage(_pagingController.firstPageKey, isRefreshing: true);
+  }
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () => Future.sync(
-        () => _pagingController.refresh(),
-      ),
+      onRefresh: _refresh,
       child: PagedListView<int, Animal>.separated(
         pagingController: _pagingController,
         separatorBuilder: (context, index) => const Divider(indent: 136),
@@ -178,33 +206,52 @@ class _AnimalsNearYouContentsPageState
               child: AnimalRow(animal: animal),
             );
           },
-          // firstPageErrorIndicatorBuilder: (context) {
-          //   // show results from cache
-          //   return FutureBuilder<List<Animal>>(
-          //     future: fetchCachedAnimals(),
-          //     builder: (context, snapshot) {
-          //       if (snapshot.hasData) {
-          //         return ListView.builder(
-          //           itemCount: snapshot.data?.length,
-          //           itemBuilder: (context, index) {
-          //             return GestureDetector(
-          //               onTap: () => AnimalDetailsRouteData(
-          //                 snapshot.data![index].id!,
-          //               ).go(context),
-          //               child: AnimalRow(animal: snapshot.data![index]),
-          //             );
-          //           },
-          //         );
-          //       } else if (snapshot.hasError) {
-          //         return Center(child: Text(snapshot.error.toString()));
-          //       } else {
-          //         return Center(child: CircularProgressIndicator());
-          //       }
-          //     },
-          //   );
-          // },
         ),
       ),
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   final animalsStream = ref.watch(animalsStreamProvider(
+  //     page: _pagingController.firstPageKey,
+  //     limit: _pageSize,
+  //     fetchPolicy: AnimalFetchPolicy.cacheAndNetwork,
+  //     location: widget.position == null
+  //         ? null
+  //         : '${widget.position?.latitude},${widget.position?.longitude}',
+  //   ));
+  //   return animalsStream.when(
+  //     loading: () => const CircularProgressIndicator(),
+  //     error: (error, stackTrace) => Text(error.toString()),
+  //     data: (data) {
+  //       final animals = data;
+  //       return RefreshIndicator(
+  //         onRefresh: _refresh,
+  //         child: ListView.separated(
+  //           itemCount: animals.length,
+  //           separatorBuilder: (context, index) => const Divider(indent: 136),
+  //           itemBuilder: (context, index) {
+  //             final animal = animals[index];
+  //             // check if we are at the end of the list
+  //             if (index == animals.length - 1) {
+  //               _fetchPage(_pagingController.nextPageKey!);
+  //             }
+  //             // append the last page
+  //             if (index == animals.length - 1 &&
+  //                 _pagingController.itemList != null &&
+  //                 _pagingController.itemList!.isNotEmpty) {
+  //               // We were previewing the list from the cache, so we need to clear it
+  //               _pagingController.itemList?.clear();
+  //             }
+  //             return GestureDetector(
+  //               onTap: () => AnimalDetailsRouteData(animal.id!).go(context),
+  //               child: AnimalRow(animal: animal),
+  //             );
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }

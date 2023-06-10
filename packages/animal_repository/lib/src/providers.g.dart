@@ -6,12 +6,11 @@ part of 'providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$animalRepositoryHash() => r'9fce9ebd9fec5bb42f6b6ee7bfc9ba2ee1164ef0';
+String _$animalRepositoryHash() => r'b817357b6835b0f34d2919e4a249e2eff350fc85';
 
 /// See also [animalRepository].
 @ProviderFor(animalRepository)
-final animalRepositoryProvider =
-    AutoDisposeFutureProvider<AnimalRepository>.internal(
+final animalRepositoryProvider = AutoDisposeProvider<AnimalRepository>.internal(
   animalRepository,
   name: r'animalRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,8 +20,8 @@ final animalRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
-typedef AnimalRepositoryRef = AutoDisposeFutureProviderRef<AnimalRepository>;
-String _$animalHash() => r'f38d300e46510010bccd6bf9ae3629faf330d1fb';
+typedef AnimalRepositoryRef = AutoDisposeProviderRef<AnimalRepository>;
+String _$animalHash() => r'9211cfd9bbb05a62f391c9546cd8d5aa892ef024';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -125,7 +124,7 @@ class AnimalProvider extends AutoDisposeFutureProvider<Animal> {
   }
 }
 
-String _$animalsStreamHash() => r'dc986d1e9b315a3133ef1b86e83517eb72b80ff6';
+String _$animalsStreamHash() => r'ab0e63bf40ea444483fb3de3e6eb1240580f9f22';
 typedef AnimalsStreamRef = AutoDisposeStreamProviderRef<List<Animal>>;
 
 /// See also [animalsStream].
@@ -240,7 +239,7 @@ class AnimalsStreamProvider extends AutoDisposeStreamProvider<List<Animal>> {
   }
 }
 
-String _$animalTypesHash() => r'bc7de1ef16caf239514aa5db98ef4bad80b35d4e';
+String _$animalTypesHash() => r'93d743910db2c529b163680a99be05576d7c7b0b';
 
 /// See also [animalTypes].
 @ProviderFor(animalTypes)

@@ -1,9 +1,12 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:domain_models/domain_models.dart';
 import 'package:isar/isar.dart';
 import 'package:local_storage/src/models/animal_cm.dart';
 import 'package:local_storage/src/models/animal_type_cm.dart';
 import 'package:local_storage/src/models/organization_cm.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:animal_repository/animal_repository.dart';
+
+part 'local_storage_base.g.dart';
 
 class LocalStorage {
   LocalStorage(this.isar);
@@ -95,17 +98,23 @@ class LocalStorage {
   }
 }
 
-final isarPod = FutureProvider((ref) async {
-  final dir = await getApplicationDocumentsDirectory();
-  return Isar.open([
-    AnimalCMSchema,
-    OrganizationCMSchema,
-    AnimalTypeCMSchema,
-  ], directory: dir.path);
+final isarPod = Provider<Isar>((ref) {
+  // final dir = await getApplicationDocumentsDirectory();
+  // return Isar.open([
+  //   AnimalCMSchema,
+  //   OrganizationCMSchema,
+  //   AnimalTypeCMSchema,
+  // ], directory: dir.path);
+  throw UnimplementedError();
 });
 
-final localStoragePod = FutureProvider<LocalStorage>((ref) async {
-  final isar = await ref.watch(isarPod.future);
+final localStoragePod =
+    Provider<LocalStorage>((ref) => LocalStorage(ref.watch(isarPod)));
 
-  return LocalStorage(isar);
-});
+@riverpod
+Stream<List<Animal>> animalsStream(AnimalsStreamRef ref) async* {
+  final localStorage = ref.watch(localStoragePod);
+  yield* localStorage
+      .animalsStream()
+      .map((animals) => animals.map((e) => e.toDomainModel()).toList());
+}
