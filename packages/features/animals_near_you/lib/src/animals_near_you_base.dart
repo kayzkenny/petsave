@@ -137,13 +137,13 @@ class _AnimalsNearYouContentsPageState
   }
 
   Future<List<Animal>> fetchCachedAnimals() async {
-    final animalRepository = await ref.watch(animalRepositoryProvider.future);
+    final animalRepository = ref.read(animalRepositoryProvider);
     return animalRepository.getAnimalsFromCache();
   }
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final animalRepository = await ref.watch(animalRepositoryProvider.future);
+      final animalRepository = ref.watch(animalRepositoryProvider);
       final newItems = await animalRepository.getAnimalsFromNetwork(
         location: '${widget.position?.latitude},${widget.position?.longitude}',
         page: pageKey,

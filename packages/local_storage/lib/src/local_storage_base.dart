@@ -3,7 +3,6 @@ import 'package:isar/isar.dart';
 import 'package:local_storage/src/models/animal_cm.dart';
 import 'package:local_storage/src/models/animal_type_cm.dart';
 import 'package:local_storage/src/models/organization_cm.dart';
-import 'package:path_provider/path_provider.dart';
 
 class LocalStorage {
   LocalStorage(this.isar);
@@ -95,17 +94,9 @@ class LocalStorage {
   }
 }
 
-final isarPod = FutureProvider((ref) async {
-  final dir = await getApplicationDocumentsDirectory();
-  return Isar.open([
-    AnimalCMSchema,
-    OrganizationCMSchema,
-    AnimalTypeCMSchema,
-  ], directory: dir.path);
+final isarPod = Provider<Isar>((ref) {
+  throw UnimplementedError();
 });
 
-final localStoragePod = FutureProvider<LocalStorage>((ref) async {
-  final isar = await ref.watch(isarPod.future);
-
-  return LocalStorage(isar);
-});
+final localStoragePod =
+    Provider<LocalStorage>((ref) => LocalStorage(ref.watch(isarPod)));

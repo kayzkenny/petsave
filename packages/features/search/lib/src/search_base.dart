@@ -97,7 +97,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     if (animalTypes.isNotEmpty) {
       return animalTypes;
     }
-    final animalRepository = await ref.read(animalRepositoryProvider.future);
+    final animalRepository = ref.read(animalRepositoryProvider);
     final types = await animalRepository.getAnimalTypes();
     animalTypes = types;
     return types;
@@ -116,7 +116,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
         return;
       }
 
-      final animalRepository = await ref.read(animalRepositoryProvider.future);
+      final animalRepository = ref.read(animalRepositoryProvider);
       final newItems = await animalRepository.getAnimals(
         name: query,
         limit: _pageSize,
