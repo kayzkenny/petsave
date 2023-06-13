@@ -127,6 +127,35 @@ class _AnimalsNearYouContentsPageState
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
+    _pagingController.addStatusListener((status) {
+      debugPrint('status: $status');
+      // show snackbar for each status
+      switch (status) {
+        case PagingStatus.completed:
+          // show a snackbar with messsage 'All items fetched'
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('All items fetched'),
+            ),
+          );
+          break;
+        case PagingStatus.noItemsFound:
+          break;
+        case PagingStatus.loadingFirstPage:
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Loading first page'),
+            ),
+          );
+          break;
+        case PagingStatus.ongoing:
+          break;
+        case PagingStatus.firstPageError:
+          break;
+        case PagingStatus.subsequentPageError:
+          break;
+      }
+    });
     super.initState();
   }
 
@@ -178,22 +207,41 @@ class _AnimalsNearYouContentsPageState
               child: AnimalRow(animal: animal),
             );
           },
+          firstPageProgressIndicatorBuilder: (context) {
+            // show results from cache
+            return FutureBuilder<List<Animal>>(
+              future: fetchCachedAnimals(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  return Column(
+                    children: [
+                      for (final animal in snapshot.data!)
+                        AnimalRow(animal: animal),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text(snapshot.error.toString()));
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            );
+          },
           // firstPageErrorIndicatorBuilder: (context) {
           //   // show results from cache
           //   return FutureBuilder<List<Animal>>(
           //     future: fetchCachedAnimals(),
           //     builder: (context, snapshot) {
-          //       if (snapshot.hasData) {
-          //         return ListView.builder(
-          //           itemCount: snapshot.data?.length,
-          //           itemBuilder: (context, index) {
-          //             return GestureDetector(
-          //               onTap: () => AnimalDetailsRouteData(
-          //                 snapshot.data![index].id!,
-          //               ).go(context),
-          //               child: AnimalRow(animal: snapshot.data![index]),
-          //             );
-          //           },
+          //       if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          //         return ListView(
+          //           children: [
+          //             for (final animal in snapshot.data!)
+          //               GestureDetector(
+          //                 onTap: () => AnimalDetailsRouteData(animal.id!)
+          //                     .go(context),
+          //                 child: AnimalRow(animal: animal),
+          //               ),
+          //           ],
           //         );
           //       } else if (snapshot.hasError) {
           //         return Center(child: Text(snapshot.error.toString()));

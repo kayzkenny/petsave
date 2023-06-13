@@ -27,7 +27,7 @@ void main() async {
           overrides: [
             sharedPreferencesServiceProvider
                 .overrideWithValue(sharedPreferences),
-            isarPod.overrideWith(isar),
+            isarPod.overrideWithValue(isar),
           ],
           child: const MyApp(),
         ),
